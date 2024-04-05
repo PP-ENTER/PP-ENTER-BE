@@ -17,44 +17,19 @@
   </head>
 
   <body>
-    {% comment %} <header class="bg-gray-800 flex justify-around items-center border-b border-gray-300 py-10 text-white ">
-      <div class='mr-10 ml-10'>
-        <h1 class="text-xl font-bold">
-          <a href="{% url 'post_list' %}">넌 어디든 갈 수 있어</a>
-        </h1>
-        <nav></nav>
-      </header> {% endcomment %}
-      <header class="mx-10 p-4 border-b-4 border-b-custom-whiteblue">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- 로고와 기타 내용 -->
-            <div>
-                <a href="{% url 'post_list' %}"><img src="{% static 'assets/img/img_logo.png' %}" alt="logo" width="150" height="150"></a>
+    <header class="flex justify-center">
+        {% comment %} <div class="bg-white px-10 py-4 border-b-4 border-b-custom-whiteblue" style="width: 60vh"> {% endcomment %}
+        <div class="bg-white px-10 py-4" style="width: 60vh">
+            <!-- 로고 -->
+            <div class="mx-8 flex justify-center">
+                <img src="{% static 'assets/img/img_logo.png' %}" alt="PP&ENTER" width="200" height="200">
             </div>
-
-            <div class="flex items-center" style="max-width: 50%; width: 100%; margin: auto;">
-                <form id="chat-form" class="flex w-full">
-               <input type="search" class="flex-1 px-4 py-2 border-2 rounded-lg" placeholder="메인 검색창에 작성됩니다.">
-                <button class="ml-3 px-8 border-2 rounded-lg bg-custom-whiteblue hover:bg-blue-600 text-white">
-                  검색
-                </button>
-                
-                  </form>
-            </div>
-    
-            <!-- 네비게이션 메뉴 -->
-            <div>
-            <nav class="flex items-center">
-                <ul class="flex space-x-4 mr-6">
-                  <li><a href="#" class="text-gray-600 hover:text-black hover:font-bold">프로필</a></li>
-                  <li><a href="#" class="text-gray-600 hover:text-black hover:font-bold">로그아웃</a></li>
-                </ul>
-                <!-- 알림 아이콘 -->
-                <div class="cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="text-yellow-500 bi bi-bell-fill" viewBox="0 0 16 16">
-                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
-                      </svg>
-                </div>
-              </nav>
+            <div class="flex justify-center space-x-4 mt-5"> <!-- 아바타들이 좌우로 분산되도록 space-x-4 사용 -->
+            <!-- 아바타 이미지들 -->
+            <img src="{% static 'assets/img/img_person_1.png' %}" alt="Avatar 1" class="rounded-full" width="70" height="70">
+            <img src="{% static 'assets/img/img_person_2.png' %}" alt="Avatar 2" class="rounded-full" width="70" height="70">
+            <img src="{% static 'assets/img/img_person_3.png' %}" alt="Avatar 3" class="rounded-full" width="70" height="70">
+            <img src="{% static 'assets/img/img_person_4.png' %}" alt="Avatar 4" class="rounded-full" width="70" height="70">
             </div>
         </div>
       </header>
