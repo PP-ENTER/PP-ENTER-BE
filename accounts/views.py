@@ -18,8 +18,34 @@ User = get_user_model()
 
 
 class UserCreateView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = UserCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        username = serializer.validated_data['username']
+        nickname = serializer.validated_data['nickname']
+        password = serializer.validated_data['password']
+        profile_image = serializer.validated_data.get('profile_image', None)
+        first_name = serializer.validated_data.get('first_name', None)
+        last_name = serializer.validated_data.get('last_name', None)
+
+        user = User.objects.create_user(
+            username=username,
+            nickname=nickname,
+            password=password,
+            profile_image=profile_image,
+            first_name=first_name,
+            last_name=last_name
+        )
+        return user
 
 
 class UserLoginView(APIView):

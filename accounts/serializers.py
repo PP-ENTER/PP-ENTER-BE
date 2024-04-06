@@ -1,3 +1,5 @@
+import re
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,22 +16,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
     class Meta:
         model = User
         fields = ('username', 'nickname', 'password', 'profile_image', 'first_name', 'last_name')
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            nickname=validated_data['nickname'],
-            password=validated_data['password'],
-            profile_image=validated_data.get('profile_image', None),
-            first_name=validated_data.get('first_name', None),
-            last_name=validated_data.get('last_name', None),
-        )
-        return user
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError('비밀번호는 8자 이상이어야 합니다.')
+
+        if not re.search(r'[0-9]', value):
+            raise serializers.ValidationError("비밀번호는 숫자를 포함해야 합니다.")
+
+        if not re.search(r'[!@#$%^&*()]', value):
+            raise serializers.ValidationError("비밀번호는 특수문자를 포함해야 합니다.")
+
+        return value
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop('password', None)
+        return representation
 
 
 class UserLoginSerializer(serializers.Serializer):

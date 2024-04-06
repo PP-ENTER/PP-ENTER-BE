@@ -3,7 +3,7 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    nickname = models.CharField(max_length=255, unique=True)  # 닉네임
+    nickname = models.CharField(max_length=255, unique=False)  # 닉네임
     profile_image = models.ImageField(upload_to='profile/', null=True, blank=True)  # 프로필 이미지
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
 
