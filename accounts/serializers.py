@@ -1,8 +1,10 @@
 import re
 
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from .models import Friend, FriendRequest
 
@@ -15,25 +17,56 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'nickname', 'profile_image', 'first_name', 'last_name')
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(
+        required=True,
+        write_only=True,
+        validators=[validate_password]
+    )
+    password2 = serializers.CharField(
+        required=True,
+        write_only=True
+    )
+
     class Meta:
         model = User
-        fields = ('username', 'nickname', 'password', 'profile_image', 'first_name', 'last_name')
+        fields = (
+            'username', 'nickname', 'password', 'password2', 'profile_image', 'first_name', 'last_name'
+        )
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError('비밀번호는 8자 이상이어야 합니다.')
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password': '비밀번호가 일치하지 않습니다.'})
 
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("비밀번호는 숫자를 포함해야 합니다.")
+        return data
 
-        if not re.search(r'[!@#$%^&*()]', value):
-            raise serializers.ValidationError("비밀번호는 특수문자를 포함해야 합니다.")
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            nickname=validated_data['nickname'],
+            profile_image=validated_data.get('profile_image', None),
+            first_name=validated_data.get('first_name', None),
+            last_name=validated_data.get('last_name', None)
+        )
 
-        return value
+        user.set_password(validated_data['password'])
+        user.save()
+
+        refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+
+        return {
+            'user': user,
+            'refresh': str(refresh),
+            'access': str(access_token),
+        }
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -41,19 +74,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return representation
 
 
-class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
 
-    def validate(self, attrs):
-        username = attrs.get('username', None)
-        password = attrs.get('password', None)
-        
-        # username이 서버에 등록되어 있지 않을 때
-        if not User.objects.filter(username=username).exists():
-            raise serializers.ValidationError('존재하지 않는 사용자입니다.')
-
-        return attrs
+    def validate(self, data):
+        user = authenticate(**data)
+        if user:
+            access_token = AccessToken.for_user(user)
+            data['access'] = str(access_token)
+            return data
+        else:
+            raise serializers.ValidationError('아이디 또는 비밀번호가 일치하지 않습니다.')
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):

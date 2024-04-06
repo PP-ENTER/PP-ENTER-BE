@@ -7,77 +7,37 @@ from django.contrib.auth import get_user_model, authenticate, login
 from .models import Friend, FriendRequest
 from .serializers import (
     UserSerializer,
-    UserCreateSerializer,
+    RegisterSerializer,
+    LoginSerializer,
     UserUpdateSerializer,
     FriendSerializer,
     FriendRequestSerializer,
-    UserLoginSerializer,
 )
 
 User = get_user_model()
 
 
-class UserCreateView(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        user = serializer.save()
 
-        user = self.perform_create(serializer)
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        username = serializer.validated_data['username']
-        nickname = serializer.validated_data['nickname']
-        password = serializer.validated_data['password']
-        profile_image = serializer.validated_data.get('profile_image', None)
-        first_name = serializer.validated_data.get('first_name', None)
-        last_name = serializer.validated_data.get('last_name', None)
-
-        user = User.objects.create_user(
-            username=username,
-            nickname=nickname,
-            password=password,
-            profile_image=profile_image,
-            first_name=first_name,
-            last_name=last_name
-        )
-        return user
+        return Response({
+            "user": serializer.data,
+            "message": "사용자 생성이 완료되었습니다. 이제 로그인하세요."
+        }, status=status.HTTP_201_CREATED)
 
 
-class UserLoginView(APIView):
+class LoginView(APIView):
+    serializer_class = LoginSerializer
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data['username'])
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            password = serializer.validated_data['password']
-
-            # login(request, user)
-            # return Response(serializer.data, status=status.HTTP_200_OK)
-
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
-                return Response({'error': '존재하지 않는 사용자입니다.'}, status=status.HTTP_404_NOT_FOUND)
-
-            if not user.check_password(password):
-                return Response({'error': '잘못된 비밀번호입니다.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            token = RefreshToken.for_user(user)
-            refresh = str(token)
-            access = str(token.access_token)
-
-            data = {
-                'id': user.id,
-                'nickname': user.nickname,
-                'access_token': access
-            }
-            return Response(data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        token = serializer.validated_data
+        return Response(token, status=status.HTTP_200_OK)
 
 
 class UserUpdateView(generics.UpdateAPIView):
