@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model, authenticate, login
 from .models import Friend, FriendRequest
 from .serializers import (
@@ -21,13 +22,33 @@ class UserCreateView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
 
 
-class LoginView(APIView):
+class UserLoginView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
-            user_data = serializer.validated_data
-            return Response(user_data, status=status.HTTP_200_OK)
-        return Response({'message': "로그인 실패", 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                return Response({'error': '존재하지 않는 사용자입니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            if not user.check_password(password):
+                return Response({'error': '잘못된 비밀번호입니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            token = RefreshToken.for_user(user)
+            refresh = str(token)
+            access = str(token.access_token)
+
+            data = {
+                'id': user.id,
+                'nickname': user.nickname,
+                'access_token': access
+            }
+            return Response(data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpdateView(generics.UpdateAPIView):
@@ -44,8 +65,10 @@ class FriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        to_user_id = request.data.get('to_user_id')
-        to_user = User.objects.get(id=to_user_id)
+        try:
+            to_user = User.objects.get(id=request.data['to_user'])
+        except User.DoesNotExist:
+            return Response({'message': '존재하지 않는 사용자입니다.'}, status=status.HTTP_400_BAD_REQUEST)
         friend_request, created = FriendRequest.objects.get_or_create(
             from_user=request.user,
             to_user=to_user,
@@ -67,4 +90,4 @@ class FriendListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Friend.objects.filter(user_id=self.request.user)
+        return Friend.objects.filter(user_id=self.request.to_user)
