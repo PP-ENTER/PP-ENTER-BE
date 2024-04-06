@@ -50,15 +50,18 @@ class UserCreateView(generics.CreateAPIView):
 
 class UserLoginView(APIView):
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data['username'])
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
 
+            # login(request, user)
+            # return Response(serializer.data, status=status.HTTP_200_OK)
+
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                return Response({'error': '존재하지 않는 사용자입니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': '존재하지 않는 사용자입니다.'}, status=status.HTTP_404_NOT_FOUND)
 
             if not user.check_password(password):
                 return Response({'error': '잘못된 비밀번호입니다.'}, status=status.HTTP_400_BAD_REQUEST)

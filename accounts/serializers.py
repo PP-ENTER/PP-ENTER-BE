@@ -42,13 +42,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=64)
-    password = serializers.CharField(max_length=128, write_only=True)
+    username = serializers.CharField()
+    password = serializers.CharField()
 
-    def validate_username(self, value):
-        if not User.objects.filter(username=value).exists():
+    def validate(self, attrs):
+        username = attrs.get('username', None)
+        password = attrs.get('password', None)
+        
+        # username이 서버에 등록되어 있지 않을 때
+        if not User.objects.filter(username=username).exists():
             raise serializers.ValidationError('존재하지 않는 사용자입니다.')
-        return value
+
+        return attrs
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
