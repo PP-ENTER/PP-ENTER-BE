@@ -14,13 +14,11 @@ AbstractUser
 # nickname : zerochul
 
 class CustomUser(AbstractUser):
-    # user_no = models.AutoField(primary_key=True) # 1, 2, 3,.... # 자동 증가(serialNo)
-    user_id = models.CharField(max_length=255, unique=True)  # test, leehojun ..    # 고유한 사용자 ID 필드 추가
-    nickname = models.CharField(max_length=255) # 별명
-    profile_image = models.ImageField(upload_to="users/images/", null=True, blank=True)
-    # created_at = models.DateTimeField(auto_now_add=True) # join date
-    is_active = models.BooleanField(default=False) # 접속여부 
-    updated_at = models.DateTimeField(auto_now=True)
+    id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=255, unique=True) # 아이디
+    nickname = models.CharField(max_length=255, unique=True) # 닉네임
+    profile_image = models.ImageField(upload_to='profile/', null=True, blank=True) # 프로필 이미지
+    updated_at = models.DateTimeField(auto_now=True) # 수정일
 
 
 class Friend(models.Model): 
@@ -32,7 +30,7 @@ class Friend(models.Model):
         unique_together = ('user_id', 'friend_id',)
 
     def __str__(self):
-        return f"{self.user.username} - {self.friend.username}"
+        return f'{self.user_id} : {self.friend_id}'
     
 
 class FriendRequest(models.Model):
