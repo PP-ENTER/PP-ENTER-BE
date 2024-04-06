@@ -2,42 +2,32 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-AbstractUser
-# id: 1
-# username: 엄영철
-# firstname: 영철(null)
-# lastname: 엄(null)
-
-# --------
-
-# user_id : test / password test1234! => "로그인 정보"
-# nickname : zerochul
-
 class CustomUser(AbstractUser):
-    id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=255, unique=True) # 아이디
-    nickname = models.CharField(max_length=255, unique=True) # 닉네임
-    profile_image = models.ImageField(upload_to='profile/', null=True, blank=True) # 프로필 이미지
-    updated_at = models.DateTimeField(auto_now=True) # 수정일
+    nickname = models.CharField(max_length=255, unique=True)  # 닉네임
+    profile_image = models.ImageField(upload_to='profile/', null=True, blank=True)  # 프로필 이미지
+    updated_at = models.DateTimeField(auto_now=True)  # 수정일
 
 
-class Friend(models.Model): 
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
-    friend_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
+class Friend(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
+    friend = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user_id', 'friend_id',)
+        unique_together = ('user', 'friend',)
 
     def __str__(self):
-        return f'{self.user_id} : {self.friend_id}'
-    
+        return f'{self.user.nickname} : {self.friend.nickname}'
+
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_friend_requests')
     to_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_friend_requests')
-    stauts = models.BooleanField() # 현재 상태 -> 1. 요청중, 거절, 2. 수락 => 상대방이 받으면 True -> Friend에 반영
+    status = models.BooleanField(default=False)  # 현재 상태 -> False: 요청중, True: 수락
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('from_user', 'to_user')
+        unique_together = ('from_user', 'to_user',)
+
+    def __str__(self):
+        return f'{self.from_user.nickname} -> {self.to_user.nickname}'
