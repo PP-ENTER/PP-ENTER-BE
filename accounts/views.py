@@ -46,11 +46,6 @@ class ProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def get(self, request, *args, **kwargs):
-        user = self.get_object()
-        serializer = self.get_serializer(user)
-        return Response(serializer.data)
-
 
 class UserUpdateView(generics.UpdateAPIView):
     serializer_class = UserUpdateSerializer

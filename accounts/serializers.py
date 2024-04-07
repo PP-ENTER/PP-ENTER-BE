@@ -17,6 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'nickname', 'profile_image', 'first_name', 'last_name')
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'nickname', 'profile_image', 'first_name', 'last_name')
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
@@ -142,12 +148,5 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
         if from_user == to_user:
             raise serializers.ValidationError("Users cannot send friend requests to themselves.")
-
-        if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
-            raise serializers.ValidationError("A friend request has already been sent.")
-
-        if Friend.objects.filter(user=from_user, friend=to_user).exists() or \
-           Friend.objects.filter(user=to_user, friend=from_user).exists():
-            raise serializers.ValidationError("These users are already friends.")
 
         return data
