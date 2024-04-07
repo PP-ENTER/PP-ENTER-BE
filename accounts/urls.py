@@ -4,8 +4,9 @@ from .views import (
     LoginView,
     UserUpdateView,
     FriendRequestView,
+    AcceptFriendRequestView,
     ProfileView,
-    FriendListView,
+    FriendView,
 )
 
 urlpatterns = [
@@ -13,6 +14,10 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='user-login'),
     path('update/', UserUpdateView.as_view(), name='user-update'),
     path('friend-request/', FriendRequestView.as_view(), name='friend-request'),
+    path('friend-requests/<int:friend_request_id>/accept/',
+         AcceptFriendRequestView.as_view(),
+         name='accept-friend-request'
+    ),
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
-    path('friends/', FriendListView.as_view(), name='friend-list'),
+    path('friends/', FriendView.as_view(), name='friend-list'),
 ]

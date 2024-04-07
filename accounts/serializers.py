@@ -16,6 +16,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'nickname', 'profile_image', 'first_name', 'last_name')
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop('password', None)
+        return representation
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -87,19 +92,67 @@ class LoginSerializer(serializers.Serializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('nickname', 'profile_image')
+        fields = (
+            'nickname', 'profile_image', 'first_name', 'last_name'
+        )
+
+    def update(self, instance, validated_data):
+        instance.nickname = validated_data.get('nickname', instance.nickname)
+        instance.profile_image = validated_data.get('profile_image', instance.profile_image)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance
 
 
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friend
-        fields = ('id', 'friend',)
+        fields = ('id', 'user', 'friend',)
+        read_only_fields = ('id')
+
+    def validate(self, data):
+        user = data.get('user')
+        friend = data.get('friend')
+
+        if user == friend:
+            raise serializers.ValidationError("Users cannot be friends with themselves.")
+
+        if Friend.objects.filter(user=user, friend=friend).exists() or \
+           Friend.objects.filter(user=friend, friend=user).exists():
+            raise serializers.ValidationError("These users are already friends.")
+
+        return data
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        friend = validated_data['friend']
+
+        # Create the friendship in both directions
+        Friend.objects.create(user=user, friend=friend)
+        Friend.objects.create(user=friend, friend=user)
+
+        return validated_data
 
 
 class FriendRequestSerializer(serializers.ModelSerializer):
-    from_user = serializers.ReadOnlyField(source='from_user.nickname')
-    to_user = serializers.ReadOnlyField(source='to_user.nickname')
-
     class Meta:
         model = FriendRequest
-        fields = ('id', 'from_user', 'to_user', 'status')
+        fields = ['id', 'from_user', 'to_user', 'created_at', 'status']
+        read_only_fields = ['id']
+
+    def validate(self, data):
+        from_user = data.get('from_user')
+        to_user = data.get('to_user')
+
+        if from_user == to_user:
+            raise serializers.ValidationError("Users cannot send friend requests to themselves.")
+
+        if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+            raise serializers.ValidationError("A friend request has already been sent.")
+
+        if Friend.objects.filter(user=from_user, friend=to_user).exists() or \
+           Friend.objects.filter(user=to_user, friend=from_user).exists():
+            raise serializers.ValidationError("These users are already friends.")
+
+        return data
