@@ -60,13 +60,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         refresh = RefreshToken.for_user(user)
-        access_token = refresh.access_token
+        token = refresh.access_token
 
-        return {
-            'user': user,
-            'refresh': str(refresh),
-            'access': str(access_token),
-        }
+        return user
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
