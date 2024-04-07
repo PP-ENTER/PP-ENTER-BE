@@ -1,11 +1,29 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=255, unique=False)  # 닉네임
     profile_image = models.ImageField(upload_to='profile/', null=True, blank=True)  # 프로필 이미지
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
+
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    # primary_key를 CustomUser의 pk로 설정하여 통합적으로 관리
+    nickname = models.CharField(max_length=255, unique=False)  # 닉네임
+    profile_image = models.ImageField(upload_to='profile/', default='default.png')  # 프로필 이미지
+    updated_at = models.DateTimeField(auto_now=True)  # 수정일
+
+
+@receiver(post_save, sender=CustomUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+        # CustomUser가 생성되면 Profile도 생성되도록 함
 
 
 class Friend(models.Model):

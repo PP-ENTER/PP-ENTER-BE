@@ -16,11 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'nickname', 'profile_image', 'first_name', 'last_name')
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation.pop('password', None)
-        return representation
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
