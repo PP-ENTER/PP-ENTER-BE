@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "accounts",
     "posts",
     "facechats",
+    # Channels 
+    "channels",
 ]
 
 MIDDLEWARE = [

@@ -9,15 +9,20 @@ class FaceChat(models.Model):
     stauts = models.IntegerField()  # 0: 진행 중, 1: 종료, 2: 중지 -> boolena type 
     duration = models.DateTimeField()  # 날짜
     count = models.IntegerField() # 조회 수
+    max_participants = models.IntegerField(default=4) # 최대 인원 설정
+    current_participants = models.IntegerField(default=0) # 현재 인원 설정
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    finished_at = models.DateTimeField(auto_now=True)
 
-
+# History Table 
 class FaceChatParticipant(models.Model):
     face_chat_id = models.ForeignKey(FaceChat, on_delete=models.CASCADE, related_name='participants')
-    seqno = models.IntegerField() # 자동증가, 최대 4
+    seqno = models.IntegerField() # 자동증가
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='participated_chats')
     joined_at = models.DateTimeField()
+    exited_at = models.DateTimeField()
+
 
     class Meta:
         unique_together = ('face_chat_id', 'seqno')
