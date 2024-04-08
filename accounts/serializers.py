@@ -1,6 +1,7 @@
 import re
 
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
@@ -107,46 +108,57 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
 class FriendSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    friend = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
+
     class Meta:
         model = Friend
-        fields = ('id', 'user', 'friend',)
-        read_only_fields = ('id')
+        fields = ['id', 'user', 'friend', 'created_at']
+
+    def validate_friend(self, value):
+        if self.context['request'].user in value:
+            raise serializers.ValidationError('자기 자신을 친구로 추가할 수 없습니다.')
+
+        return value
+
+    def create(self, validated_data):
+        friend = Friend.objects.create(
+            user=validated_data['user']
+        )
+        friend.friend.add(*validated_data['friend'])
+        return friend
+
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    from_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    to_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = FriendRequest
+        fields = ['id', 'from_user', 'to_user', 'status', 'created_at']
 
     def validate(self, data):
-        user = data.get('user')
-        friend = data.get('friend')
+        if data['from_user'] == data['to_user']:
+            raise serializers.ValidationError('자기 자신에게 친구 요청을 보낼 수 없습니다.')
 
-        if user == friend:
-            raise serializers.ValidationError("Users cannot be friends with themselves.")
+        # 이미 친구 요청을 보낸 경우
+        if FriendRequest.objects.filter(from_user=data['from_user'], to_user=data['to_user']).exists():
+            raise serializers.ValidationError('이미 친구 요청을 보냈습니다.')
 
-        if Friend.objects.filter(user=user, friend=friend).exists() or \
-           Friend.objects.filter(user=friend, friend=user).exists():
-            raise serializers.ValidationError("These users are already friends.")
+        # 이미 친구 요청을 받은 경우
+        if FriendRequest.objects.filter(from_user=data['to_user'], to_user=data['from_user']).exists():
+            raise serializers.ValidationError('상대방이 이미 친구 요청을 보냈습니다.')
+
+        # 이미 친구인 경우
+        if Friend.objects.filter(user=data['from_user'], friend=data['to_user']).exists() or Friend.objects.filter(
+                user=data['to_user'], friend=data['from_user']).exists():
+            raise serializers.ValidationError('이미 친구입니다.')
 
         return data
 
     def create(self, validated_data):
-        user = validated_data['user']
-        friend = validated_data['friend']
-
-        # Create the friendship in both directions
-        Friend.objects.create(user=user, friend=friend)
-        Friend.objects.create(user=friend, friend=user)
-
-        return validated_data
-
-
-class FriendRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FriendRequest
-        fields = ['id', 'from_user', 'to_user', 'created_at', 'status']
-        read_only_fields = ['id']
-
-    def validate(self, data):
-        from_user = data.get('from_user')
-        to_user = data.get('to_user')
-
-        if from_user == to_user:
-            raise serializers.ValidationError("Users cannot send friend requests to themselves.")
-
-        return data
+        friend_request = FriendRequest.objects.create(
+            from_user=validated_data['from_user'],
+            to_user=validated_data['to_user']
+        )
+        return friend_request
