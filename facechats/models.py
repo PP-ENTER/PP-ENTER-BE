@@ -25,7 +25,7 @@ class FaceChatParticipant(models.Model):
 
 class FaceChatTag(models.Model):
     face_chat_id = models.ForeignKey('FaceChat', on_delete=models.CASCADE, related_name='tags')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='facechats')
+    tag_id = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='facechats')
 
     class Meta:
-        unique_together = ('face_chat_id', 'tag')
+        unique_together = ('face_chat_id', 'tag_id')
