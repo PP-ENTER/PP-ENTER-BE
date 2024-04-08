@@ -45,12 +45,7 @@ class LoginView(APIView):
 class ProfileView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class UserUpdateView(generics.UpdateAPIView):
-    serializer_class = UserUpdateSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
 
     def get_object(self):
         return self.request.user
@@ -60,6 +55,22 @@ class UserUpdateView(generics.UpdateAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.perform_update(serializer)
+        return Response(serializer.data)
+
+
+class UserUpdateView(generics.UpdateAPIView):
+    serializer_class = UserUpdateSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]  # JWT 인증을 사용하는 경우 주석 해제
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 
