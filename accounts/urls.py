@@ -18,6 +18,6 @@ urlpatterns = [
          AcceptFriendRequestView.as_view(),
          name='accept-friend-request'
     ),
-    path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('friends/', FriendView.as_view(), name='friend-list'),
 ]
