@@ -94,17 +94,7 @@ class LoginSerializer(serializers.Serializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = (
-            'nickname', 'profile_image', 'first_name', 'last_name'
-        )
-
-    def update(self, instance, validated_data):
-        instance.nickname = validated_data.get('nickname', instance.nickname)
-        instance.profile_image = validated_data.get('profile_image', instance.profile_image)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.save()
-        return instance
+        fields = ('nickname', 'profile_image', 'first_name', 'last_name')
 
 
 class FriendSerializer(serializers.ModelSerializer):
