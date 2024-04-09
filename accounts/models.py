@@ -10,7 +10,6 @@ class CustomUser(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
 
 
-
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)  # CustomUser와 1:1 관계
     # primary_key를 CustomUser의 pk로 설정하여 통합적으로 관리
@@ -33,11 +32,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class Friend(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
-    friend = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
+    friend = models.ManyToManyField(CustomUser, related_name='friend_of')
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'friend',)
 
     def __str__(self):
         return f'{self.user.nickname} : {self.friend.nickname}'

@@ -3,10 +3,10 @@ from .views import (
     RegisterView,
     LoginView,
     UserUpdateView,
-    FriendRequestView,
-    AcceptFriendRequestView,
-    ProfileView,
-    FriendView,
+    FriendList,
+    FriendDetail,
+    FriendRequestList,
+    FriendRequestDetail,
 )
 
 urlpatterns = [
