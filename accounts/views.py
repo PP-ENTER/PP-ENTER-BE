@@ -74,48 +74,76 @@ class UserUpdateView(generics.UpdateAPIView):
         return Response(serializer.data)
 
 
-class FriendList(generics.ListCreateAPIView):
-    queryset = Friend.objects.all()
-    serializer_class = FriendSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class FriendDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Friend.objects.all()
-    serializer_class = FriendSerializer
-
-
-class FriendRequestList(generics.ListCreateAPIView):
-    queryset = FriendRequest.objects.all()
+class FriendRequestView(generics.GenericAPIView):
     serializer_class = FriendRequestSerializer
+    permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(from_user=self.request.user)
-
-
-class FriendRequestDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = FriendRequest.objects.all()
-    serializer_class = FriendRequestSerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        from_user = request.user
+        to_user = serializer.validated_data['to_user']
 
-        if serializer.validated_data.get('status') == FriendRequest.ACCEPTED:
-            from_user = instance.from_user
-            to_user = instance.to_user
+        if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+            return Response({'detail': 'Friend request already sent.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # 양방향 친구 관계 생성
-            Friend.objects.create(user=from_user, friend=[to_user])
-            Friend.objects.create(user=to_user, friend=[from_user])
+        if Friend.objects.filter(user=from_user, friend=to_user).exists() or \
+                Friend.objects.filter(user=to_user, friend=from_user).exists():
+            return Response({'detail': 'Users are already friends.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # 친구 요청 삭제
-            instance.delete()
+        friend_request = FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+        serializer = self.get_serializer(friend_request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            return Response({'detail': '친구 요청이 수락되었습니다.'}, status=status.HTTP_200_OK)
 
-        self.perform_update(serializer)
+class AcceptFriendRequestView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, friend_request_id):
+        try:
+            friend_request = FriendRequest.objects.get(id=friend_request_id, to_user=request.user)
+        except FriendRequest.DoesNotExist:
+            return Response({'detail': 'Friend request not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        from_user = friend_request.from_user
+        to_user = friend_request.to_user
+
+        # Create the friendship
+        Friend.objects.create(user=from_user, friend=to_user)
+        Friend.objects.create(user=to_user, friend=from_user)
+
+        # Delete the friend request
+        friend_request.delete()
+
+        # Serialize the new friendship
+        serializer = FriendSerializer(Friend.objects.get(user=from_user, friend=to_user))
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class FriendView(generics.GenericAPIView):
+    serializer_class = FriendSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        friends = Friend.objects.filter(user=request.user)
+        serializer = self.get_serializer(friends, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        friend = serializer.validated_data['friend']
+
+        if user == friend:
+            return Response({'detail': 'Users cannot be friends with themselves.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if Friend.objects.filter(user=user, friend=friend).exists() or \
+                Friend.objects.filter(user=friend, friend=user).exists():
+            return Response({'detail': 'Users are already friends.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        Friend.objects.create(user=user, friend=friend)
+        Friend.objects.create(user=friend, friend=user)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
