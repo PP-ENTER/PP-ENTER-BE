@@ -1,8 +1,3 @@
-# PP-ENTER
-소셜 미디어 웹 서비스
-
-프로젝트 팀원 : 박상현, 엄영철, 이은희, 진성현
-
 공용 UI 작업
 (피그마)[https://www.figma.com/file/78bA1taofPgdNSXMKUzZ9c/Untitled?type=design&mode=design&t=ePYJJeT7TlkQEvAa-0]
 
@@ -17,8 +12,8 @@
 - Notion으로 WBS 등을 작성하였으면 노션 링크가 아니라 내용이나 캡쳐 이미지가 들어가도록 해주세요.(URL 이동 최소화)
 - ChatGPT에게 머메이드로 요구하세요. 대부분 빠르게 만족할만한 퀄리티를 얻을 수 있습니다.
 
-  
-# 지역기반 스터디 그룹 커뮤니티 서비스
+# PP-ENTER
+## 영상통화 기능이 가능한 소셜 미디어 웹 서비스
 
 ## 1. 목표와 기능
 
@@ -43,11 +38,13 @@
 - 실제 사진을 업로드 하시길 권합니다.
 <table>
 	<tr>
-		<th>이호준</th>
-		<th>이호준</th>
-		<th>이호준</th>
+		<th>박상현</th>
+		<th>엄영철</th>
+		<th>이은희</th>
+		<th>진성현</th>
 	</tr>
  	<tr>
+		<td><img src="my.jpg" width="100%"></td>
 		<td><img src="my.jpg" width="100%"></td>
 		<td><img src="my.jpg" width="100%"></td>
 		<td><img src="my.jpg" width="100%"></td>
