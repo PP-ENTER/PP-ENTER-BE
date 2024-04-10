@@ -171,3 +171,7 @@ media/
 
 # static files
 static/
+
+# docker
+.env.prod
+.env.prod.db
