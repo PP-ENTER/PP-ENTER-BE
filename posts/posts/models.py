@@ -4,8 +4,8 @@ from django.db import models
 
 class Post(models.Model):
     # photo_id = models.AutoField(primary_key=True) # Django는 기본적으로 id필드를 자동으로 추가하여 자동으로 값이 증가 -> 만약 사용자 정의로 필드명을 작성하면 해당 내용처럼 필드명을 작성하고 이렇게 되면 장고는 id값을 자동으로 생성하지x
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='photos') # CustomUser.id(o), CustomUser.user_id(x)
-    face_chat_id = models.ForeignKey('facechats.FaceChat', on_delete=models.CASCADE, related_name='photos') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts') # CustomUser.id(o), CustomUser.user_id(x)
+    face_chat_id = models.ForeignKey('facechats.FaceChat', on_delete=models.CASCADE, related_name='posts') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
     image_url = models.ImageField(blank=True, null=True)
     content = models.TextField()
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Like", related_name="liked_posts")
