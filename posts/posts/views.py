@@ -1,53 +1,77 @@
-from django.views.generic import (
-    ListView,
+from rest_framework import generics, status, permissions
+from rest_framework.response import Response
+from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
+from .serializers import (
+    PhotoSerializer, LikeSerializer, FavoriteSerializer,
+    CommentSerializer, TagSerializer, PhotoTagSerializer
 )
-# from .models import Post
 
-class PostListView(ListView):
-    # model = Post
-    template_name = "posts/post_list.html"
+class PhotoListCreateView(generics.ListCreateAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        pass
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
 
-    def get_context_data(self, **kwargs):
-        pass
+class PhotoRetrieveUpdateDeleteView(generics.RetrieveUpdateDeleteAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     search_query = self.request.GET.get("q", "")
-    #     if search_query:
-    #         queryset = queryset.filter(
-    #             Q(title__icontains=search_query)
-    #             | Q(contents__icontains=search_query)
-    #             | Q(category__icontains=search_query)
-    #             | Q(tags__name__icontains=search_query)
-    #         ).distinct().order_by("-createDate")
-    #     else:
-    #         queryset = Post.objects.all().order_by("-createDate")
-    #     return queryset
+class LikeCreateView(generics.CreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    # # context의 값을 지정하기 위한 오버라이딩
-    # def get_context_data(self, **kwargs):
-    #     # 기존 컨텍스트 데이터를 가져오기
-    #     context = super().get_context_data(**kwargs)
-    #     # 10번 반복을 위한 범위 추가
-    #     context["repeat_times"] = range(10)
+class LikeDeleteView(generics.DeleteAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-    #     search_query = self.request.GET.get("q", "")
-    #     context["search_query"] = search_query  # 검색어를 저장합니다.
-    #     # context['object_list']는 get_queryset 메서드에 의해 이미 설정되었습니다.
+class FavoriteCreateView(generics.CreateAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    #     if self.request.user.is_authenticated:
-    #         # 현재 사용자의 포스트만 필터링
-    #         user_posts = self.get_queryset().filter(author=self.request.user)
-    #         context["user_posts"] = user_posts
+class FavoriteDeleteView(generics.DeleteAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-    #         # 현재 사용자의 즐겨찾기 목록을 가져옵니다.
-    #         favorites = Favorite.objects.filter(user=self.request.user).values_list('post_id', flat=True)
-    #         context['favorites'] = favorites
+class CommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    #     return context
+    def perform_create(self, serializer):
+        photo_id = self.kwargs.get('photo_id')
+        photo = Photo.objects.get(id=photo_id)
+        serializer.save(user_id=self.request.user, photo_id=photo)
 
+class CommentUpdateDeleteView(generics.UpdateAPIView, generics.DeleteAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-post_list = PostListView.as_view()
+class TagListCreateView(generics.ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PhotoTagCreateView(generics.CreateAPIView):
+    queryset = PhotoTag.objects.all()
+    serializer_class = PhotoTagSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+class PhotoTagDeleteView(generics.DeleteAPIView):
+    queryset = PhotoTag.objects.all()
+    serializer_class = PhotoTagSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.user_id == request.user
