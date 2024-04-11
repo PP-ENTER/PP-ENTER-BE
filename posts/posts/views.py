@@ -14,7 +14,7 @@ class PhotoListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
 
-class PhotoRetrieveUpdateDeleteView(generics.RetrieveUpdateDeleteAPIView):
+class PhotoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
@@ -24,7 +24,7 @@ class LikeCreateView(generics.CreateAPIView):
     serializer_class = LikeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class LikeDeleteView(generics.DeleteAPIView):
+class LikeDestroyView(generics.DestroyAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -34,7 +34,7 @@ class FavoriteCreateView(generics.CreateAPIView):
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class FavoriteDeleteView(generics.DeleteAPIView):
+class FavoriteDestroyView(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -49,7 +49,7 @@ class CommentCreateView(generics.CreateAPIView):
         photo = Photo.objects.get(id=photo_id)
         serializer.save(user_id=self.request.user, photo_id=photo)
 
-class CommentUpdateDeleteView(generics.UpdateAPIView, generics.DeleteAPIView):
+class CommentUpdateDestroyView(generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -64,7 +64,7 @@ class PhotoTagCreateView(generics.CreateAPIView):
     serializer_class = PhotoTagSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-class PhotoTagDeleteView(generics.DeleteAPIView):
+class PhotoTagDestroyView(generics.DestroyAPIView):
     queryset = PhotoTag.objects.all()
     serializer_class = PhotoTagSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -73,5 +73,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-
         return obj.user_id == request.user
