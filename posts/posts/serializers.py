@@ -82,6 +82,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'created_at', 
             'updated_at', 
             'parent_id',
+            'photo'
             )
 
     def get_replies(self, obj):

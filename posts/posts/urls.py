@@ -4,7 +4,7 @@ from .views import (
     LikeCreateView, LikeDestroyView,
     FavoriteCreateView, FavoriteDestroyView,
     CommentCreateView, CommentUpdateDestroyView,
-    TagListCreateView, PhotoTagCreateView, PhotoTagDestroyView
+    TagListCreateView, TagSearchView, TagDestroyView, PhotoTagCreateView, PhotoTagDestroyView
 )
 
 app_name = 'posts'
@@ -20,6 +20,8 @@ urlpatterns = [
     path('comments/', CommentCreateView.as_view(), name='comment_create'),
     path('comments/<int:pk>/', CommentUpdateDestroyView.as_view(), name='comment_update_delete'),
     path('tags/', TagListCreateView.as_view(), name='tag_list_create'),
+    path('tags/search/', TagSearchView.as_view(), name='tag-search'),
+    path('tags/<int:pk>/', TagDestroyView.as_view(), name='tag_delete'),
     path('photo_tags/', PhotoTagCreateView.as_view(), name='photo_tag_create'),
     path('photo_tags/<int:pk>/', PhotoTagDestroyView.as_view(), name='photo_tag_delete'), 
 ]

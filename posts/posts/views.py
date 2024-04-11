@@ -25,6 +25,13 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
+def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.count += 1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class LikeCreateView(generics.CreateAPIView):
     queryset = Like.objects.all()
@@ -58,7 +65,7 @@ class CommentCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         photo_id = self.kwargs.get('photo_id')
         photo = Photo.objects.get(id=photo_id)
-        serializer.save(user_id=self.request.user, photo_id=photo)
+        serializer.save(user=self.request.user, post=post, parent_id=self.request.data.get('parent_id'))
 
 
 class CommentUpdateDestroyView(generics.UpdateAPIView, generics.DestroyAPIView):
@@ -71,6 +78,20 @@ class TagListCreateView(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class TagSearchView(generics.ListAPIView):
+    serializer_class = TagSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', '')
+        return Tag.objects.filter(name__icontains=query)
+
+
+class TagDestroyView(generics.DestroyAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class PhotoTagCreateView(generics.CreateAPIView):
