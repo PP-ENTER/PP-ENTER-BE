@@ -5,42 +5,120 @@
 # 24.04.04 base.html 확인을 위해 미작성
 # -> 작성 필요
 
+# serializers.py
 from rest_framework import serializers
-from .models import Comment, Post, Like
+from django.contrib.auth import get_user_model
 
+from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
+
+
+User = get_user_model()
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = (
+            'id', 
+            'author', 
+            'photo', 
+        )
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = (
+            'id', 
+            'author', 
+            'photo', 
+            )
 
 class CommentSerializer(serializers.ModelSerializer):
-    author_username = serializers.ReadOnlyField(source="author.username")
-
+    author = serializers.StringRelatedField(read_only=True)
+    replies = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ["id", "post", "author", "author_username", "text", "created_at"]
-        read_only_fields = ["author", "author_username"]
+        fields = (
+            'id', 
+            'author', 
+            'content', 
+            'created_at', 
+            'updated_at', 
+            'parent_id',
+            )
+
+    def get_replies(self, obj):
+        replies = Comment.objects.filter(parent_id=obj)
+        return CommentSerializer(replies, many=True).data
+
+    def validate_content(self, value):
+        if len(value) < 1:
+            raise serializers.ValidationError("댓글 내용을 입력해주세요.")
+        return value
+    
+    def create(self, validated_data):
+        request = self.context.get('request')
+        photo_id = self.context.get('photo_id')
+        photo = Photo.objects.get(id=photo_id)
+
+        if request and request.user.is_authenticated:
+            comment = Comment.objects.create(
+                user_id=request.user,
+                photo_id=photo,
+                content=validated_data['content'],
+                parent_id=validated_data.get('parent_id', None)
+            )
+            return comment
+        else:
+            raise serializers.ValidationError("로그인이 필요합니다.")
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        if request and request.user != instance.user_id:
+            raise serializers.ValidationError('댓글 수정 권한이 없습니다.')
+        instance.content = validated_data.get('content', instance.content)
+        instance.save()
+        return instance
+
+    def delete(self, instance):
+        request = self.context.get('request')
+        if request and request.user != instance.user_id:
+            raise serializers.ValidationError('댓글 삭제 권한이 없습니다.')
+        instance.delete()
 
 
-class PostSerializer(serializers.ModelSerializer):
-    author_username = serializers.ReadOnlyField(source="author.username")
-    comments = CommentSerializer(many=True, read_only=True)
-    likes_count = serializers.IntegerField(source="likes.count", read_only=True)
-    is_liked = serializers.SerializerMethodField()
+
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'name')
+
+
+class PhotoTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoTag
+        fields = ('id', 'photo_id', 'tag_id')
+
+class PhotoSerializer(serializers.ModelSerializer):
+    likes = LikeSerializer(many=True, read_only=True)
+    favorites = FavoriteSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True) # 댓글 수정 가능
+    photo_tags = PhotoTagSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Post
-        fields = [
-            "id",
-            "author",
-            "author_username",
-            "caption",
-            "image",
-            "created_at",
-            "comments",
-            "likes_count",
-            "is_liked",
-        ]
-        read_only_fields = ["author", "author_username", "likes_count", "is_liked"]
-
-    def get_is_liked(self, obj):
-        user = self.context["request"].user
-        if user.is_authenticated:
-            return Like.objects.filter(post=obj, user=user).exists()
-        return False
+        model = Photo
+        fields = (
+            'id',
+            'user_id', 
+            'face_chat_id', 
+            'image_url', 
+            'content', 
+            'likes', 
+            'favorites', 
+            'comments', 
+            'photo_tags', 
+            'count', 
+            'created_at', 
+            'updated_at',
+            )
