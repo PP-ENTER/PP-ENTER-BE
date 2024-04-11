@@ -44,12 +44,14 @@ class Comment(models.Model):
     # 대댓글을 위한 self-referential ForeignKey
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
 
+
 class Tag(models.Model):
     # tag_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
+    
     
 class PhotoTag(models.Model):
     photo_id = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='photo_tags')

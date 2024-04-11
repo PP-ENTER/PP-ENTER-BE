@@ -9,24 +9,25 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
+from .models import Post, Like, Favorite, Comment, Tag, PhotoTag
 
 
 User = get_user_model()
 
 
-class PhotoSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     likes = LikeSerializer(many=True, read_only=True)
     favorites = FavoriteSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True)
     photo_tags = PhotoTagSerializer(many=True, read_only=True)
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
-        model = Photo
+        model = Post
         fields = (
             'id', 
-            'user_id', 
-            'face_chat_id', 
+            'user', 
+            'face_chat', 
             'image_url', 
             'content', 
             'likes', 
@@ -38,7 +39,7 @@ class PhotoSerializer(serializers.ModelSerializer):
             'updated_at')
 
     def create(self, validated_data):
-        post = Photo.objects.create(**validated_data)
+        post = post.objects.create(**validated_data)
         return post
 
     def update(self, instance, validated_data):
@@ -58,6 +59,7 @@ class LikeSerializer(serializers.ModelSerializer):
             'photo', 
         )
 
+
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
@@ -66,6 +68,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             'author', 
             'photo', 
             )
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
@@ -119,6 +122,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if request and request.user != instance.user_id:
             raise serializers.ValidationError('댓글 삭제 권한이 없습니다.')
         instance.delete()
+
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
