@@ -5,7 +5,7 @@
 # 24.04.04 base.html 확인을 위해 미작성
 # -> 작성 필요
 
-# serializers.py
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -13,6 +13,34 @@ from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 
 
 User = get_user_model()
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = (
+            'id', 
+            'user_id', 
+            'face_chat_id', 
+            'image_url', 
+            'content', 
+            'likes', 
+            'favorites', 
+            'comments', 
+            'photo_tags', 
+            'count', 
+            'created_at', 
+            'updated_at')
+
+    def create(self, validated_data):
+        post = Photo.objects.create(**validated_data)
+        return post
+
+    def update(self, instance, validated_data):
+        instance.face_chat_id = validated_data.get('face_chat_id', instance.face_chat_id)
+        instance.image_url = validated_data.get('image_url', instance.image_url)
+        instance.content = validated_data.get('content', instance.content)
+        instance.save()
+        return instance
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
