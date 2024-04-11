@@ -10,8 +10,9 @@ from .views import (
 app_name = 'posts'
 
 urlpatterns = [
-    path('post_list/', PostListCreateView.as_view(), name='post_list'),
-    path('post/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post_detail'),
+    path('posts/', PostListCreateView.as_view(), name='post_list'),
+    path('posts/create/', PostCreateView.as_view(), name='post_create'),
+    path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post_detail'),
     path('likes/', LikeCreateView.as_view(), name='like_create'),
     path('likes/<int:pk>/', LikeDestroyView.as_view(), name='like_delete'),
     path('favorites/', FavoriteCreateView.as_view(), name='favorite_create'),
