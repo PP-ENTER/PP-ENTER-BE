@@ -14,7 +14,13 @@ from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 
 User = get_user_model()
 
-class PostSerializer(serializers.ModelSerializer):
+
+class PhotoSerializer(serializers.ModelSerializer):
+    likes = LikeSerializer(many=True, read_only=True)
+    favorites = FavoriteSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True)
+    photo_tags = PhotoTagSerializer(many=True, read_only=True)
+
     class Meta:
         model = Photo
         fields = (
@@ -41,6 +47,7 @@ class PostSerializer(serializers.ModelSerializer):
         instance.content = validated_data.get('content', instance.content)
         instance.save()
         return instance
+
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -122,27 +129,4 @@ class TagSerializer(serializers.ModelSerializer):
 class PhotoTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoTag
-        fields = ('id', 'photo_id', 'tag_id')
-
-class PhotoSerializer(serializers.ModelSerializer):
-    likes = LikeSerializer(many=True, read_only=True)
-    favorites = FavoriteSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True) # 댓글 수정 가능
-    photo_tags = PhotoTagSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Photo
-        fields = (
-            'id',
-            'user_id', 
-            'face_chat_id', 
-            'image_url', 
-            'content', 
-            'likes', 
-            'favorites', 
-            'comments', 
-            'photo_tags', 
-            'count', 
-            'created_at', 
-            'updated_at',
-            )
+        fields = ('id', 'photo', 'tag')
