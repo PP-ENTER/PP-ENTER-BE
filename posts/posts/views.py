@@ -1,18 +1,23 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from .models import Post, Like, Favorite, Comment, Tag, PhotoTag
+from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 from .serializers import (
     PostSerializer, LikeSerializer, FavoriteSerializer,
     CommentSerializer, TagSerializer, PhotoTagSerializer
 )
 
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user_id == request.user
 
 class PostListView(generics.ListAPIView):
-    queryset = Post.objects.all()
+    queryset = Photo.objects.all()
     serializer_class = PostSerializer
 
 class PostCreateView(generics.CreateAPIView):
-    queryset = Post.objects.all()
+    queryset = Photo.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -21,7 +26,7 @@ class PostCreateView(generics.CreateAPIView):
 
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
+    queryset = Photo.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
@@ -65,7 +70,7 @@ class CommentCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         photo_id = self.kwargs.get('photo_id')
         photo = Photo.objects.get(id=photo_id)
-        serializer.save(user=self.request.user, post=post, parent_id=self.request.data.get('parent_id'))
+        serializer.save(user=self.request.user, photo=photo, parent_id=self.request.data.get('parent_id'))
 
 
 class CommentUpdateDestroyView(generics.UpdateAPIView, generics.DestroyAPIView):
@@ -106,8 +111,8 @@ class PhotoTagDestroyView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.user_id == request.user
+class PostListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        return Photo.objects.all().order_by('-created_at')[:10]

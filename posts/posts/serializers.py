@@ -9,45 +9,10 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from .models import Post, Like, Favorite, Comment, Tag, PhotoTag
+from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 
 
 User = get_user_model()
-
-
-class PostSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    likes = LikeSerializer(many=True, read_only=True)
-    favorites = FavoriteSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True)
-    photo_tags = PhotoTagSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Post
-        fields = (
-            'id', 
-            'user', 
-            'face_chat', 
-            'image_url', 
-            'content', 
-            'likes', 
-            'favorites', 
-            'comments', 
-            'photo_tags', 
-            'count', 
-            'created_at', 
-            'updated_at')
-
-    def create(self, validated_data):
-        post = post.objects.create(**validated_data)
-        return post
-
-    def update(self, instance, validated_data):
-        instance.face_chat_id = validated_data.get('face_chat_id', instance.face_chat_id)
-        instance.image_url = validated_data.get('image_url', instance.image_url)
-        instance.content = validated_data.get('content', instance.content)
-        instance.save()
-        return instance
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -89,7 +54,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
             'photo', 
             )
 
-     def create(self, validated_data):
+    def create(self, validated_data):
         user = self.context['request'].user
         post = validated_data['post']
         favorite, created = Favorite.objects.get_or_create(user=user, post=post)
@@ -166,10 +131,10 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 def create(self, validated_data):
-        tag, created = Tag.objects.get_or_create(**validated_data)
-        if not created:
-            raise serializers.ValidationError("이미 존재하는 태그입니다.")
-        return tag
+    tag, created = Tag.objects.get_or_create(**validated_data)
+    if not created:
+        raise serializers.ValidationError("이미 존재하는 태그입니다.")
+    return tag
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
@@ -187,10 +152,10 @@ class PhotoTagSerializer(serializers.ModelSerializer):
         fields = ('id', 'photo', 'tag')
 
         def create(self, validated_data):
-        phototag, created = PhotoTag.objects.get_or_create(**validated_data)
-        if not created:
-            raise serializers.ValidationError("이미 존재하는 태그입니다.")
-        return PhotoTag
+            phototag, created = PhotoTag.objects.get_or_create(**validated_data)
+            if not created:
+                raise serializers.ValidationError("이미 존재하는 태그입니다.")
+            return PhotoTag
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
@@ -199,4 +164,38 @@ class PhotoTagSerializer(serializers.ModelSerializer):
 
     def delete(self, instance):
         instance.delete()
+        return instance
+    
+class PostSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    likes = LikeSerializer(many=True, read_only=True)
+    favorites = FavoriteSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True)
+    photo_tags = PhotoTagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Photo
+        fields = (
+            'id', 
+            'user', 
+            'face_chat', 
+            'image_url', 
+            'content', 
+            'likes', 
+            'favorites', 
+            'comments', 
+            'photo_tags', 
+            'count', 
+            'created_at', 
+            'updated_at')
+
+    def create(self, validated_data):
+        post = post.objects.create(**validated_data)
+        return post
+
+    def update(self, instance, validated_data):
+        instance.face_chat_id = validated_data.get('face_chat_id', instance.face_chat_id)
+        instance.image_url = validated_data.get('image_url', instance.image_url)
+        instance.content = validated_data.get('content', instance.content)
+        instance.save()
         return instance
