@@ -16,11 +16,11 @@ User = get_user_model()
 
 
 class PostSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
     likes = LikeSerializer(many=True, read_only=True)
     favorites = FavoriteSerializer(many=True, read_only=True)
     comments = CommentSerializer(many=True)
     photo_tags = PhotoTagSerializer(many=True, read_only=True)
-    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Post

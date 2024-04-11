@@ -7,13 +7,17 @@ from .serializers import (
 )
 
 
-class PostListCreateView(generics.ListCreateAPIView):
+class PostListView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class PostCreateView(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user_id=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
