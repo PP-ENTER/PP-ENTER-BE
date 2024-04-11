@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    PhotoListCreateView, PhotoRetrieveUpdateDestroyView,
+    PostListCreateView, PostRetrieveUpdateDestroyView,
     LikeCreateView, LikeDestroyView,
     FavoriteCreateView, FavoriteDestroyView,
     CommentCreateView, CommentUpdateDestroyView,
@@ -10,8 +10,8 @@ from .views import (
 app_name = 'posts'
 
 urlpatterns = [
-    path('photos/', PhotoListCreateView.as_view(), name='photo_list_create'),
-    path('photos/<int:pk>/', PhotoRetrieveUpdateDestroyView.as_view(), name='photo_detail'),
+    path('post_list/', PostListCreateView.as_view(), name='post_list'),
+    path('post/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(), name='post_detail'),
     path('likes/', LikeCreateView.as_view(), name='like_create'),
     path('likes/<int:pk>/', LikeDestroyView.as_view(), name='like_delete'),
     path('favorites/', FavoriteCreateView.as_view(), name='favorite_create'),
