@@ -10,3 +10,8 @@ class FaceChatList(generics.ListAPIView):
 class FaceChatDetailView(generics.RetrieveAPIView):
     queryset = FaceChat.objects.all()
     serializer_class = FaceChatSerializer
+
+# 생성
+class FaceChatCreate(generics.ListCreateAPIView):
+    queryset = FaceChat.objects.all()
+    serializer_class = FaceChatSerializer 
