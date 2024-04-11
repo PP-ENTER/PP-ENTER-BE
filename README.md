@@ -18,21 +18,18 @@
 ## 1. 목표와 기능
 
 ### 1.1 목표
-- 지역 청년들의 SW 교육 기회 확대 플랫폼
-- 청년의 Benefit이 있는 플랫폼
-  - 책 공동 출판
-  - 오픈소스 프로젝트
-  - 상업 공동 프로젝트
-- 취업까지 연결될 수 있는 플랫폼
-- 기존 영상 강의 플랫폼과 역할이 겹치지 않는 플랫폼, 상호 보완적인 플랫폼
+- 영상통화를 중심으로 한 실시간 소통과 일상 공유 플랫폼 구축
+- 영상통화 중 감정 인식 기술을 활용해 참여자의 경험 향상
+- 영상통화 중 생성된 콘텐츠(스크린샷)를 바탕으로 한 커뮤니티 활성화
 
 ### 1.2 기능
-- 자사 콘텐츠와 연계가 가능한 플랫폼
-- 이력 관리가 가능한 플랫폼(Github Open API 활용)
-- 역량별 레벨 관리 시스템 제공(Github Open API 활용, 스터디 그룹 결과물)
-- SW 관련 해커톤이나 워크숍, 세미나, 밋업 등이 자유롭게 공유될 수 있는 플랫폼
-- 타 플랫폼에서도 활용할 수 있는 API Set 제공
-- 각 언어별 로그인 없이 실습이 바로 가능한 환경(google colab의 경우 학생들 이름으로 가입되어 있으면 작동하지 않음)
+- 실시간 영상통화 기능 (1:1 및 최대 4인 그룹 통화)
+- 영상통화 중 참여자의 감정을 인식하고 분석하여 배경 필터 자동 적용
+- 필터가 적용된 영상통화 화면 스크린샷 캡처 및 저장
+- 저장된 스크린샷을 피드에 포스팅하여 공유 및 소통
+- 포스팅에 댓글, 좋아요 등 소셜 네트워크 기본 기능 지원
+- 친구 추가, 팔로우 등 사용자 간 연결 기능
+
 
 ### 1.3 팀 구성
 - 실제 사진을 업로드 하시길 권합니다.
@@ -55,123 +52,62 @@
 ### 2.1 개발 환경
 - Web Framework
   - Django 3.x (Python 3.8)
+- FE
+  - tailwind, JS
+- 기능라이브러리??
+  - Deepface, OpenCV
 - 서비스 배포 환경
   - Amazon Lightsail
-...중략...
+ 
 ### 2.2 배포 URL
-- https://www.studyin.co.kr/
+- https://www.
 - 테스트용 계정
   ```
   id : test@test.test
   pw : test11!!
   ```
 
-### 2.3 URL 구조(모놀리식)
-- main
-
-| App       | URL                                        | Views Function    | HTML File Name                        | Note           |
-|-----------|--------------------------------------------|-------------------|---------------------------------------|----------------|
-| main      | '/'                                        | home              | main/home.html                        | 홈화면          |
-| main      | '/about/'                                  | about             | main/about.html                       | 소개화면               |
+### 2.3 URL 구조(마이크로식)
 
 
-- accounts
+| URL 패턴 | 뷰 클래스 | 설명 |
+|----------|-----------|------|
+| **계정 (accounts)** |
+| `register/` | `RegisterView` | 회원가입 기능 |
+| `login/` | `LoginView` | 로그인 기능 |
+| `logout/` | `LogoutView` (mixins: `LogoutMixin`) | 로그아웃 기능 |
+| `profile/` | `UserProfileView` | 사용자 프로필 정보 조회 및 수정 |
+| `password/change/` | `PasswordChangeView` (mixins: `PasswordChangeFormMixin`) | 비밀번호 변경 기능 |
+| **게시물 (posts)** |
+| `posts/` | `PostListView` | 게시물 목록 조회 |
+| `posts/create/` | `PostCreateView` | 새로운 게시물 작성 |
+| `posts/<int:pk>/` | `PostDetailView` | 개별 게시물 상세 정보 조회 |
+| `posts/<int:pk>/update/` | `PostUpdateView` | 게시물 수정 |
+| `posts/<int:pk>/delete/` | `PostDeleteView` | 게시물 삭제 |
+| `posts/<int:pk>/like/` | `PostLikeView` (mixins: `LikeMixin`) | 게시물 좋아요 기능 |
+| `posts/<int:pk>/favorite/` | `PostFavoriteView` (mixins: `FavoriteMixin`) | 게시물 즐겨찾기 기능 |
+| `posts/<int:pk>/tags/` | `PostTagListView` | 게시물 태그 목록 조회 |
+| `posts/<int:pk>/tags/create/` | `PostTagCreateView` | 게시물 태그 추가 |
+| `posts/<int:pk>/tags/<int:tag_pk>/delete/` | `PostTagDeleteView` | 게시물 태그 삭제 |
+| `posts/<int:pk>/comments/` | `CommentListView` | 게시물 댓글 목록 조회 |
+| `posts/<int:pk>/comments/create/` | `CommentCreateView` | 새로운 댓글 작성 |
+| `posts/<int:pk>/comments/<int:comment_pk>/update/` | `CommentUpdateView` | 댓글 수정 |
+| `posts/<int:pk>/comments/<int:comment_pk>/delete/` | `CommentDeleteView` | 댓글 삭제 |
+| **친구 (friends)** |
+| `friends/` | `FriendListView` | 친구 목록 조회 |
+| `friends/requests/` | `FriendRequestListView` | 친구 요청 목록 조회 |
+| `friends/requests/<int:pk>/accept/` | `FriendRequestAcceptView` (mixins: `FriendRequestMixin`) | 친구 요청 수락 |
+| `friends/requests/<int:pk>/reject/` | `FriendRequestRejectView` (mixins: `FriendRequestMixin`) | 친구 요청 거절 |
+| `friends/<int:pk>/remove/` | `FriendRemoveView` (mixins: `FriendRemoveMixin`) | 친구 삭제 |
+| **실시간 채팅 (facechats)** |
+| `facechats/` | `FaceChatListView` | 실시간 채팅방 목록 조회 |
+| `facechats/create/` | `FaceChatCreateView` | 새로운 실시간 채팅방 생성 |
+| `facechats/<int:pk>/` | `FaceChatDetailView` | 개별 실시간 채팅방 정보 조회 |
+| `facechats/<int:pk>/join/` | `FaceChatJoinView` (mixins: `FaceChatMixin`) | 실시간 채팅방 참가 |
+| `facechats/<int:pk>/leave/` | `FaceChatLeaveView` (mixins: `FaceChatMixin`) | 실시간 채팅방 나가기 |
+| `facechats/<int:pk>/messages/` | `FaceChatMessageListView` | 실시간 채팅 메시지 목록 조회 |
+| `facechats/<int:pk>/messages/create/` | `FaceChatMessageCreateView` | 새로운 실시간 채팅 메시지 생성 |
 
-| App       | URL                                        | Views Function    | HTML File Name                        | Note           |
-|-----------|--------------------------------------------|-------------------|---------------------------------------|----------------|
-| accounts  | 'register/'                                | register          | accounts/register.html                |회원가입         |
-| accounts  | 'login/'                                   | login             | accounts/login.html                   |로그인           |
-| accounts  | 'logout/'                                  | logout            | accounts/logout.html                  |로그아웃         |
-| accounts  | 'profile/'                                 | profile           | accounts/profile.html                 | 비밀번호변경기능 / <br>프로필 수정/ 닉네임추가 |
-
-
-- boardapp
-
-| App       | URL                                        | Views Function    | HTML File Name                        | Note           |
-|-----------|--------------------------------------------|-------------------|---------------------------------------|----------------|
-| board     | 'board/'                                   | board             | boardapp/post_list.html               | 게시판 목록 |
-| board     | 'board/<int:pk>/'                          | post_detail       | boardapp/post_detail.html            | 게시글 상세보기 |
-| board     | 'board/write/'                             | post_write        | boardapp/post_write.html             | 게시글 작성 |
-| board     | 'board/edit/<int:pk>/'                     | post_edit         | boardapp/post_edit.html              | 게시글 수정 |
-| board     | 'board/delete/<int:pk>/'                   | post_delete       | boardapp/post_delete.html            | 게시글 삭제 |
-| board     | 'board/<int:pk>/comment/'                  | comment_create    | boardapp/comment_form.html           | 댓글 작성 |
-| board     | 'board/<int:pk>/comment/<br><int:comment_pk>/edit/' | comment_edit | boardapp/comment_form.html           | 댓글 수정 |
-| board     | 'board/<int:pk>/comment/<br><int:comment_pk>/delete/' | comment_delete | boardapp/comment_<br>confirm_delete.html| 댓글 삭제 |
-
-
-- blog
-
-
-| App       | URL                                        | Views Function    | HTML File Name                        | Note           |
-|-----------|--------------------------------------------|-------------------|---------------------------------------|----------------|
-| blog      | 'blog/'                                    | blog              | blog/blog.html                        |갤러리형 게시판 메인 화면  |
-| blog      | 'blog/<int:pk>/'                           | post              | blog/post.html                        |상세 포스트 화면    |
-| blog      | 'blog/write/'                              | write             | blog/write.html                       | 카테고리 지정, 사진업로드,<br> 게시글 조회수 반영|
-| blog      | 'blog/edit/<int:pk>/'                      | edit              | blog/edit.html                        | 게시물목록보기 |
-| blog      | 'blog/delete/<int:pk>/'                    | delete            | blog/delete.html                      | 삭제 화면      |
-| blog      | 'blog/search/'                             | search            | blog/search.html                      | 주제와 카테고리에 따라 검색,<br> 시간순에 따라 정렬|
-| blog      | 'post/<int:post_pk>/comment/'              | comment_new       | blog/comment_form.html                | 댓글 입력 폼     |
-| blog      | 'post/<int:post_pk>/comment/<br><int:parent_pk>/' | reply_new    | blog/comment_form.html                | 대댓글 폼      |
-| blog      | 'post/<int:pk>/like/'                      | like_post         | blog/post.html                        |좋아요를 누르면 blog/post로 Redirect됨|
-| blog      | 'comment/<int:pk>/update/'                 | comment_update    | blog/comment_form.html                |댓글 업데이터 경로   |
-| blog      | 'comment/<int:pk>/delete/'                 | comment_delete    | blog/comment_<br>confirm_delete.html      |댓글 삭제 폼    |
-
-### 2.4 URL 구조(마이크로식)
-
-* views의 이름과 views에 믹스인 한 것이 있으면 함께 언급하면 좋습니다.
-
-|app:accounts|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
-|:-|:-|:-|:-:|:-:|
-|signup/|POST|회원가입|||
-|login/|POST|로그인|||
-|logout/|POST|로그아웃| ✅ ||
-|\<int:pk\>/|GET|프로필 조회| ✅ ||
-|\<int:pk\>/|PUT|프로필 수정| ✅ | ✅ |
-|\<int:pk\>/|DELETE|회원 탈퇴| ✅ | ✅ |
-|status/|GET|로그인 상태 확인|||
-|token/refresh/|POST|만료 토큰 재발급|||
-<br>  
-
-|app:blog|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
-|:-|:-|:-|:-:|:-:|
-|list/|GET|게시판 리스트| ✅ ||
-|create/|POST|게시물 작성| ✅ ||
-<br>
-
-|app:interview|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
-|:-|:-|:-|:-:|:-:|
-|question/|POST|면접 문제 요청| ✅ ||
-|grading/|POST|면접 문제 채점| ✅ ||
-|total/|POST|면접 점수 통계| ✅ ||
-<br>
-
-* 아래와 같이 표현할 수도 있습니다.
-
-| App       | Method        | URL                               | Views Class        | Note           |
-|-----------|---------------|-----------------------------------|------------------- |----------------|
-| blog  | GET   | '/blog/posts/'                         |   PostViewSet                 |게시글 목록 |
-| blog  | POST   | '/blog/posts/'                       |   PostViewSet                 |게시글 생성 / ChatGPT API 요청 |
-| blog  | GET   | '/blog/posts/{post_id}/'                |    PostViewSet       |게시글 상세보기 / 게시글 조회수 증가 |
-| blog  | PATCH   | '/blog/posts/{post_id}/'                  |   PostViewSet    |게시글 수정 |
-| blog  | DELETE   | '/blog/posts/{post_id}/'                   |  PostViewSet    |게시글 삭제 |
-| blog  | POST   | '/blog/posts/{post_id}/like/'                   |   PostViewSet    |게시글 좋아요 증가|
-| blog  | GET   | '/blog/posts/{post_id}/comments/'                   |   CommentViewSet    | 게시물의 댓글 목록 |
-| blog  | POST   | '/blog/posts/{post_id}/comments/'                   |   CommentViewSet    | 게시물의 댓글 생성 |
-| blog  | GET   | '/blog/posts/{post_id}/comments/{comment_id}/'       |   CommentViewSet    | 게시물의 특정 댓글 보기 |
-| blog  | PATCH   | '/blog/posts/{post_id}/comments/{comment_id}/'       |   CommentViewSet    | 게시물의 특정 댓글 수정 |
-| blog  | DELETE   | '/blog/posts/{post_id}/comments/{comment_id}/'       |   CommentViewSet    | 게시물의 특정 댓글 삭제 |
-<br>
-
-|URL|페이지 설명|GET|POST|PUT|DELETE|로그인 권한| 작성자 권한|
-|------|---|:---:|:---:|:---:|:---:|:---:|:---:|
-|/accounts/login|로그인| |✔️| | | | |
-|/accounts/logout|로그아웃| |✔️| | | | |
-|/accounts/signup|회원가입| |✔️| | | | |
-|/accounts/profile|프로필 <br> 프로필 수정 <br> 회원 탈퇴|✔️<br> <br> <br>| |✔️|<br><br>✔️|✔️ <br> ✔️ <br> ✔️|<br> ✔️ <br> ✔️
-|/accounts/token/refresh|토큰갱신| |✔️| | | | |
-|/board|게시글 목록 <br> 게시글 생성|✔️<br><br>|<br>✔️| | | <br> ✔️| |
-|/board/{postid}|게시글 상세 <br> 게시글 수정 <br> 게시글 삭제|✔️<br><br><br>| |✔️|<br><br>✔️| <br> ✔️ <br> ✔️ | <br> ✔️ <br> ✔️
-<br>
 
 ## 3. 요구사항 명세와 기능 명세
 - https://www.mindmeister.com/ 등을 사용하여 모델링 및 요구사항 명세를 시각화하면 좋습니다.
