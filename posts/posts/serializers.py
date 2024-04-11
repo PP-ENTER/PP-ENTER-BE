@@ -59,6 +59,26 @@ class LikeSerializer(serializers.ModelSerializer):
             'photo', 
         )
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        post = validated_data['post']
+        like, created = Like.objects.get_or_create(user=user, post=post)
+        if not created:
+            raise serializers.ValidationError("이미 좋아요를 누른 게시글입니다.")
+        post.count += 1
+        post.save()
+        return like
+
+    def delete(self, instance):
+        user = self.context['request'].user
+        if instance.user != user:
+            raise serializers.ValidationError("자신이 좋아요한 게시글만 취소할 수 있습니다.")
+        post = instance.post
+        post.count -= 1
+        post.save()
+        instance.delete()
+        return instance
+
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,6 +88,21 @@ class FavoriteSerializer(serializers.ModelSerializer):
             'author', 
             'photo', 
             )
+
+     def create(self, validated_data):
+        user = self.context['request'].user
+        post = validated_data['post']
+        favorite, created = Favorite.objects.get_or_create(user=user, post=post)
+        if not created:
+            raise serializers.ValidationError("이미 즐겨찾기한 게시글입니다.")
+        return favorite
+
+    def delete(self, instance):
+        user = self.context['request'].user
+        if instance.user != user:
+            raise serializers.ValidationError("자신이 즐겨찾기한 게시글만 해제할 수 있습니다.")
+        instance.delete()
+        return instance
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -130,8 +165,38 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name')
 
+def create(self, validated_data):
+        tag, created = Tag.objects.get_or_create(**validated_data)
+        if not created:
+            raise serializers.ValidationError("이미 존재하는 태그입니다.")
+        return tag
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+    def delete(self, instance):
+        instance.delete()
+        return instance
+
 
 class PhotoTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoTag
         fields = ('id', 'photo', 'tag')
+
+        def create(self, validated_data):
+        phototag, created = PhotoTag.objects.get_or_create(**validated_data)
+        if not created:
+            raise serializers.ValidationError("이미 존재하는 태그입니다.")
+        return PhotoTag
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+
+    def delete(self, instance):
+        instance.delete()
+        return instance
