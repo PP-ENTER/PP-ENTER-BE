@@ -85,10 +85,6 @@ class CommentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('댓글 삭제 권한이 없습니다.')
         instance.delete()
 
-
-
-
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
