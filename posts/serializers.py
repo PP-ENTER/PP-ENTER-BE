@@ -178,6 +178,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = (
             'user_id', 
             'face_chat_id', 
+            'photo_name',
             'image_url', 
             'content', 
             'count', 
