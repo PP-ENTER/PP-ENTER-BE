@@ -6,7 +6,6 @@ from django.conf import settings
 
 
 class Notice(models.Model):
-    id = models.IntegerField(primary_key=True)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     notice_type = models.IntegerField() # 1:좋아요, 2:채팅방 3:친구요청 등
     related_id = models.IntegerField() # 댓글id, 채팅방id, 유저id 등
