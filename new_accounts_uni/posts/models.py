@@ -8,13 +8,17 @@ class Photo(models.Model):
     face_chat_id = models.ForeignKey('facechats.FaceChat', on_delete=models.CASCADE, related_name='photos') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
     image_url = models.ImageField()
     content = models.CharField(max_length=255, blank=True, null=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Like", related_name="liked_posts")
     count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+     def __str__(self):
+            return f"{self.user.username}'s post ({self.created_at})"
+
 
 class Like(models.Model):
-    photo_id = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='likes')
+    photo_id = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='likes_photo')
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
