@@ -35,8 +35,8 @@ class Friend(models.Model):
     friend = models.ManyToManyField(CustomUser, related_name='friend_of')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.user.nickname} : {self.friend.nickname}'
+    # def __str__(self):
+    #     return f'{self.user.username} : {self.friend.}'
 
 
 class FriendRequest(models.Model):
