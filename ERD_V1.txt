@@ -1,0 +1,95 @@
+Table User {
+  user_no Int [pk]
+  userid Varchar [pk]
+  username Varchar
+  nickname Varchar
+  email Varchar
+  password Varchar
+  profile_image Varchar
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table Friend {
+  user_no Int [ref: > User.user_no, pk]
+  friend_no Int [ref: > User.user_no, pk]
+  created_at Timestamp
+}
+
+Table FaceChat {
+  face_chat_id Int [pk]
+  room_name Varchar
+  host_no Int [ref: > User.user_no]
+  finish Int // 통화 종료 여부 -> 종료되면 지난 기록으로 확인
+  duration Int // 몇분 통화했는지
+  count Int
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table FaceChatParticipant { // 해당 채팅에 참여한 사람 , 방장포함
+  face_chat_id Int [ref: > FaceChat.face_chat_id, pk]
+  seqno Int [pk] // 순번
+  user_no Int [ref: > User.user_no]
+  joined_at Timestamp
+}
+
+Table Photo {
+  photo_id Int [pk]
+  user_no Int [ref: > User.user_no]
+  face_chat_id Int [ref: > FaceChat.face_chat_id]
+  image_url Varchar
+  caption Varchar
+  count Int
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table Like {
+  // id Int [pk] -> 이게 왜 필요할까..? -> 위에도 있었는데 내가 지운 것..
+  photo_id Int [ref: > Photo.photo_id, pk]
+  user_no Int [ref: > User.user_no, pk]
+  created_at Timestamp
+}
+
+Table Favorite {
+  // id Int [pk] -> 이게 왜 필요할까..? -> 헷갈리는 부분: 외래키 설정시 부모의 기본키를 삭제하면 자식 테이블은..?(제약조건에 따라 다르겠지만..) -> 삭제불가!
+  user_no Int [ref: > User.user_no, pk]
+  photo_id Int [ref: > Photo.photo_id, pk]
+  created_at Timestamp
+}
+
+Table Tag {
+  tag_id Int [pk]
+  name Varchar
+}
+
+Table PhotoTag {
+  id Int [pk] // 이것도 왜 필요한거지..
+  photo_id Int [ref: > Photo.photo_id]
+  tag_id Int [ref: > Tag.tag_id]
+}
+
+Table FaceChatTag {
+  id Int [pk] // 이것도 왜 필요한거지..
+  facechat_id Int [ref: > FaceChat.face_chat_id]
+  tag_id Int [ref: > Tag.tag_id]
+}
+
+Table Comment { // 대댓글 반영해야함.
+  id Int [pk]
+  user_no Int [ref: > User.user_no]
+  photo_id Int [ref: > Photo.photo_id]
+  content Text
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table Notice {
+  id Int [pk]
+  user_no Int [ref: > User.user_no]
+  content Text
+  is_read Boolean
+  created_at Timestamp
+  updated_at Timestamp
+}
