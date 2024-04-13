@@ -187,7 +187,7 @@ class PostSerializer(serializers.ModelSerializer):
             'updated_at')
 
     def create(self, validated_data):
-        post = post.objects.create(**validated_data)
+        post = Photo.objects.create(**validated_data)
         return post
 
     def update(self, instance, validated_data):

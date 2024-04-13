@@ -1,12 +1,12 @@
 from django.urls import path
 from .views import (
-    PostListCreateView, PostRetrieveUpdateDestroyView,
+    PostRetrieveUpdateDestroyView,
     LikeCreateView, LikeDestroyView,
     FavoriteCreateView, FavoriteDestroyView,
     CommentCreateView, CommentUpdateDestroyView,
     TagListCreateView, TagSearchView, TagDestroyView, PhotoTagCreateView, PhotoTagDestroyView,
     PostCreateView, PostListView,
-    PostMainListView, PostDetailListView, PostDetailListSearchView, PostMainListSearchView
+    PostMainListView, PostDetailListView, PostDetailListSearchView, PostMainListSearchView, 
 )
 
 app_name = 'posts'
