@@ -1,9 +1,8 @@
-import re
-
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from .models import Friend, FriendRequest
@@ -76,15 +75,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         return representation
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(TokenObtainPairSerializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
     def validate(self, data):
         user = authenticate(**data)
         if user:
-            access_token = AccessToken.for_user(user)
-            data['access'] = str(access_token)
+            refresh = RefreshToken.for_user(user)
+            token = refresh.access_token
+            data['user'] = user
+            data['refresh'] = str(refresh)
+            data['access'] = str(token)
             return data
         else:
             raise serializers.ValidationError('아이디 또는 비밀번호가 일치하지 않습니다.')
@@ -100,7 +102,7 @@ class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friend
         fields = ('id', 'user', 'friend',)
-        read_only_fields = ('id')
+        read_only_fields = ('id',)
 
     def validate(self, data):
         user = data.get('user')

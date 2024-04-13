@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Friend, FriendRequest
 from .serializers import (
@@ -32,14 +33,23 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-class LoginView(APIView):
+class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        token = serializer.validated_data
-        return Response(token, status=status.HTTP_200_OK)
+        user = serializer.validated_data['user']
+        refresh = serializer.validated_data['refresh']
+        access = serializer.validated_data['access']
+        return Response(
+            {'username': user.username,
+             'nickname': user.nickname,
+             'refresh': str(refresh),
+             'access': str(access),
+             },
+            status=status.HTTP_200_OK
+        )
 
 
 class ProfileView(generics.RetrieveAPIView):
