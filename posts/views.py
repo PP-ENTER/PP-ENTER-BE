@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
