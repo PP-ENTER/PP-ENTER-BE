@@ -23,7 +23,7 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ("content",)
 
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
 admin.site.register(Comment, CommentAdmin)
