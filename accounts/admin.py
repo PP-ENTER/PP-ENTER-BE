@@ -5,6 +5,7 @@ from .models import Profile, Friend, FriendRequest
 
 User = get_user_model()
 
+
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
