@@ -107,20 +107,43 @@
 - 머메이드를 이용해 시각화 할 수 있습니다.
   
 ```mermaid
-    sequenceDiagram
-    actor A as client
-    participant B as Web
-    participant C as server
-    A->>+B: 로그인 요청
-    B->>+A: 로그인 정보 요구
-    A->>+C: id, pw 전달
-    alt 로그인 정보가 있고 로그인 정보가 맞을 시
-    C->>+B: access token, refresh token 전달
-    B->>+A: 로그인 성공
-    else 로그인 정보가 없거나 정보가 맞지 않을시
-    C->>+B: False
-    B->>+A: 로그인 실패
+sequenceDiagram
+    participant 클라이언트 as A
+    participant 웹 as B
+    participant 서버 as C
+
+    클라이언트->>+웹: 회원가입 요청
+    웹->>+서버: 회원가입 정보 전송 (POST /accounts/register/)
+    C-->>웹: 회원가입 완료
+    웹-->>클라이언트: 회원가입 성공
+
+    클라이언트->>+웹: 로그인 요청
+    웹->>+서버: 로그인 정보 전송 (POST /accounts/login/)
+    Note over 서버: 로그인 정보 검증
+    alt 로그인 성공
+        C-->>웹: 액세스 토큰, 리프레시 토큰 반환
+        웹-->>클라이언트: 로그인 성공
+    else 로그인 실패
+        C-->>웹: False
+        웹-->>클라이언트: 로그인 실패
     end
+
+    클라이언트->>+웹: 로그아웃 요청
+    웹->>+서버: 로그아웃 정보 전송 (POST /accounts/logout/)
+    C-->>웹: 로그아웃 완료
+    웹-->>클라이언트: 로그아웃 성공
+
+    클라이언트->>+웹: 사용자 프로필 요청
+    웹->>+서버: 사용자 프로필 정보 요청 (GET /accounts/profile/)
+    C-->>웹: 사용자 프로필 정보 반환
+    웹-->>클라이언트: 사용자 프로필 표시
+
+    클라이언트->>+웹: 비밀번호 변경 요청
+    웹->>+서버: 비밀번호 변경 정보 전송 (POST /accounts/password/change/)
+    Note over 서버: 비밀번호 변경 처리
+    C-->>웹: 비밀번호 변경 완료
+    웹-->>클라이언트: 비밀번호 변경 성공
+
 ```
 
 ## 4. 프로젝트 구조와 개발 일정
