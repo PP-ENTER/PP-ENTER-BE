@@ -1,4 +1,3 @@
-from django.db.models import Q
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
@@ -6,7 +5,6 @@ from .serializers import (
     PostSerializer, LikeSerializer, FavoriteSerializer,
     CommentSerializer, TagSerializer, PhotoTagSerializer
 )
-
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -20,7 +18,7 @@ class PostMainListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Photo.objects.all().order_by('-created_at')[:10]
-
+    
 
 class PostDetailListView(generics.ListAPIView):
     serializer_class = PostSerializer
@@ -35,22 +33,22 @@ class PostDetailListView(generics.ListAPIView):
 
 class PostMainListSearchView(generics.ListAPIView):
     serializer_class = PostSerializer
-
+ 
     def get_queryset(self):
         # photo_name = self.request.query_params.get('photo_name', None)
         photo_name = self.kwargs['photo_name']
 
-        return Photo.objects.all().filter(Q(photo_name__icontains=photo_name)).order_by('-created_at')[:10]
-
+        return Photo.objects.all().filter(Q(photo_name__icontains = photo_name)).order_by('-created_at')[:10]
+    
 
 class PostDetailListSearchView(generics.ListAPIView):
     serializer_class = PostSerializer
-
+ 
     def get_queryset(self):
         # photo_name = self.request.query_params.get('photo_name', None)
         photo_name = self.kwargs['photo_name']
 
-        return Photo.objects.all().filter(Q(photo_name__icontains=photo_name)).order_by('-created_at')
+        return Photo.objects.all().filter(Q(photo_name__icontains = photo_name)).order_by('-created_at')
         query = self.request.query_params.get('query', '')
         return Tag.objects.filter(name__icontains=query)
 
@@ -74,13 +72,12 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-
 def retrieve(self, request, *args, **kwargs):
-    instance = self.get_object()
-    instance.count += 1
-    instance.save()
-    serializer = self.get_serializer(instance)
-    return Response(serializer.data)
+        instance = self.get_object()
+        instance.count += 1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class LikeCreateView(generics.CreateAPIView):
