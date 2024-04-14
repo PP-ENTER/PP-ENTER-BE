@@ -1,10 +1,20 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 from .serializers import (
     PostSerializer, LikeSerializer, FavoriteSerializer,
     CommentSerializer, TagSerializer, PhotoTagSerializer
 )
+
+
+class CheckLoginView(generics.GenericAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        return Response({'isLoggedIn': True}, status=status.HTTP_200_OK)
+
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
