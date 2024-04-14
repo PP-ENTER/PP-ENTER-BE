@@ -395,54 +395,109 @@ gantt
 
 * 아래 ERD는 머메이드를 사용했습니다.
 ```mermaid
-erDiagram
-    user ||--o{ post : write
-    user {
-      integer id PK
-      varchar username
-      varchar password
-      image profile_image
-      datetime created_at
-      varchar ip_address
-      datetime last_login
-    }
-    post }|--|{ tag : contains
-    post ||--o| category : has
-    post {
-      integer id PK
-      varchar title
-      text content
-      file file_upload
-      image image_upload
-      datetime created_at
-      datetime updated_at
-      varchar writer
-      integer user_id FK
-      integer hits
-      integer tags FK
-      varchar category FK
-    }
-    post ||--o{ comment : contains
-    comment ||--o{ comment : contains
-    comment {
-      integer id PK
-      integer parent FK
-      text comment
-      comment comment_reply FK
-      datetime created_at
-      datetime updated_at
-    }
-    
-    tag {
-      integer id PK
-      varchar name
-    }
-    
-    
-    category {
-      integer id PK
-      varchar name
-    }
+Table User {
+  id Int [pk]
+  username Varchar
+  nickname Varchar
+  email Varchar
+  password Varchar
+  profile_image Varchar
+  is_active Boolean // 현재 접속 여부
+  date_joined Timestamp
+  date_edited Timestamp
+}
+
+Table Friend {
+  user_id Int [ref: > User.id, pk]
+  friend_id Int [ref: > User.id, pk]
+  created_at Timestamp
+}
+
+Table FriendRequest {
+  from_user Int [ref: > User.id, pk]
+  to_user Int [ref: > User.id, pk]
+  status Varchar // 대기중, 수락됨, 거절됨
+  created_at Timestamp
+}
+
+Table FaceChat {
+  face_chat_id Int [pk]
+  room_name Varchar
+  host_id Int [ref: > User.id]
+  is_active Boolean // 비활성화 지난 기록으로 확인
+  duration Int // 몇분 통화했는지
+  count Int // 조회 수
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table FaceChatParticipant { // 해당 채팅에 참여한 사람 , 방장포함
+  face_chat_id Int [ref: > FaceChat.face_chat_id, pk]
+  seqno Int [pk]
+  user_id Int [ref: > User.id]
+  joined_at Timestamp
+}
+
+Table FaceChatTag {
+  facechat_id Int [ref: > FaceChat.face_chat_id]
+  tag_id Int [ref: > Tag.tag_id]
+  created_at Timestamp
+}
+
+Table Photo {
+  photo_id Int [pk]
+  user_id Int [ref: > User.id]
+  face_chat_id Int [ref: > FaceChat.face_chat_id]
+  image_url image
+  content Varchar
+  count Int
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table Like {
+  photo_id Int [ref: > Photo.photo_id, pk]
+  user_id Int [ref: > User.id, pk]
+  created_at Timestamp
+}
+
+Table Favorite {
+  user_id Int [ref: > User.id, pk]
+  photo_id Int [ref: > Photo.photo_id, pk]
+  created_at Timestamp
+}
+
+Table Tag {
+  tag_id Int [pk]
+  name Varchar
+}
+
+Table PhotoTag {
+  photo_id Int [ref: > Photo.photo_id]
+  tag_id Int [ref: > Tag.tag_id]
+  created_at Timestamp
+}
+
+Table Comment { // 대댓글 반영해야함.
+  id Int [pk]
+  parent_id Int [ref: > Comment.id]
+  user_id Int [ref: > User.id]
+  photo_id Int [ref: > Photo.photo_id]
+  content Text
+  created_at Timestamp
+  updated_at Timestamp
+}
+
+Table Notice {
+  id Int [pk]
+  user_id Int [ref: > User.id]
+  notice_type Int // 좋아요, 채팅방 활성화 등
+  related_id Int // 댓글id, 채팅방id, 유저id 등
+  content Text
+  is_read Boolean
+  created_at Timestamp
+  updated_at Timestamp
+}
 ```
 
 * 아래 ERD는 [ERDCloud](https://www.erdcloud.com/)를 사용했습니다.
