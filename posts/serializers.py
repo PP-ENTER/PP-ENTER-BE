@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .models import Photo, Like, Favorite, Comment, Tag, PhotoTag
 
+
 User = get_user_model()
 
 
@@ -13,9 +14,9 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = (
-            'id',
-            'author',
-            'photo',
+            'id', 
+            'author', 
+            'photo', 
         )
 
     def create(self, validated_data):
@@ -43,10 +44,10 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = (
-            'id',
-            'author',
-            'photo',
-        )
+            'id', 
+            'author', 
+            'photo', 
+            )
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -67,18 +68,17 @@ class FavoriteSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     replies = serializers.SerializerMethodField()
-
     class Meta:
         model = Comment
         fields = (
-            'id',
-            'author',
-            'content',
-            'created_at',
-            'updated_at',
+            'id', 
+            'author', 
+            'content', 
+            'created_at', 
+            'updated_at', 
             'parent_id',
             'photo'
-        )
+            )
 
     def get_replies(self, obj):
         replies = Comment.objects.filter(parent_id=obj)
@@ -88,7 +88,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if len(value) < 1:
             raise serializers.ValidationError("댓글 내용을 입력해주세요.")
         return value
-
+    
     def create(self, validated_data):
         request = self.context.get('request')
         photo_id = self.context.get('photo_id')
@@ -125,7 +125,6 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('id', 'name')
 
-
 def create(self, validated_data):
     tag, created = Tag.objects.get_or_create(**validated_data)
     if not created:
@@ -161,7 +160,7 @@ class PhotoTagSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         instance.delete()
         return instance
-
+    
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
@@ -173,21 +172,21 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = (
-            'id',
-            'user',
-            'face_chat',
-            'image_url',
-            'content',
-            'likes',
-            'favorites',
-            'comments',
-            'photo_tags',
-            'count',
-            'created_at',
+            'id', 
+            'user', 
+            'face_chat', 
+            'image_url', 
+            'content', 
+            'likes', 
+            'favorites', 
+            'comments', 
+            'photo_tags', 
+            'count', 
+            'created_at', 
             'updated_at')
 
     def create(self, validated_data):
-        post = Photo.objects.create(**validated_data)
+        post = post.objects.create(**validated_data)
         return post
 
     def update(self, instance, validated_data):
