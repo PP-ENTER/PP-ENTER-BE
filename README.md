@@ -243,6 +243,7 @@
 ### 4.1 개발 일정(WBS)
 * 아래 일정표는 머메이드로 작성했습니다.
 ```mermaid
+
 gantt
     title 피피앤엔터 개발 일정
     dateFormat YY-MM-DD
