@@ -1,7 +1,7 @@
 공용 UI 작업
 (피그마)[https://www.figma.com/file/78bA1taofPgdNSXMKUzZ9c/Untitled?type=design&mode=design&t=ePYJJeT7TlkQEvAa-0]
 
-![header]([https://capsule-render.vercel.app/api?type=venom&height=300&color=auto&text=PPnENTER&fontColor=grey])
+![header]([https://capsule-render.vercel.app/api?type=venom&height=300&color=auto&text=PPnENTER&fontColor=white])
 
 # PP-ENTER
 ## 영상통화 기능이 가능한 소셜 미디어 웹 서비스
