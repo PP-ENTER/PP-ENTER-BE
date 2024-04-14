@@ -41,6 +41,66 @@
 
 ## 2. 개발 환경 및 배포 URL
 ### 2.1 개발 환경
+![header](https://capsule-render.vercel.app/api?type=venom&height=300&color=gradient&text=PPnENTER&fontColor=d6ace6)
+
+# PP-ENTER
+## 영상통화 기능이 가능한 소셜 미디어 웹 서비스
+
+## 1. 목표와 기능
+
+### 1.1 목표
+- 영상통화를 중심으로 한 실시간 소통과 일상 공유 플랫폼 구축
+- 영상통화 중 감정 인식 기술을 활용해 참여자의 경험 향상
+- 영상통화 중 생성된 콘텐츠(스크린샷)를 바탕으로 한 커뮤니티 활성화
+
+### 1.2 기능
+- 실시간 영상통화 기능 (1:1 및 최대 4인 그룹 통화)
+- 영상통화 중 참여자의 감정을 인식하고 분석하여 배경 필터 자동 적용
+- 필터가 적용된 영상통화 화면 스크린샷 캡처 및 저장
+- 저장된 스크린샷을 피드에 포스팅하여 공유 및 소통
+- 포스팅에 댓글, 좋아요 등 소셜 네트워크 기본 기능 지원
+- 친구 추가, 팔로우 등 사용자 간 연결 기능
+
+
+### 1.3 팀 구성
+- 실제 사진을 업로드 하시길 권합니다.
+<table>
+	<tr>
+		<th>박상현</th>
+		<th>엄영철</th>
+		<th>이은희</th>
+		<th>진성현</th>
+	</tr>
+ 	<tr>
+		<td><img src="my.jpg" width="100%"></td>
+		<td><img src="my.jpg" width="100%"></td>
+		<td><img src="my.jpg" width="100%"></td>
+		<td><img src="my.jpg" width="100%"></td>
+	</tr>
+</table>
+
+## 2. 개발 환경 및 배포 URL
+### 2.1 개발 환경
+- Web Framework
+<div align="left">
+	<img src="https://img.shields.io/badge/django-#092E20?style=flat&logo=Django&logoColor=white" />
+</div>
+- Django 3.x (Python 3.8)
+<div align="left">
+  	<img src="https://img.shields.io/badge/python-#3776AB?style=flat&logo=python&logoColor=white" />
+</div>
+- FE
+<div align="left">
+	<img src="https://img.shields.io/badge/tailwind CSS-#06B6D4?style=flat&logo=tailwindcss&logoColor=white" />
+        <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white" />
+	<img src="https://img.shields.io/badge/JS-#F7DF1E?style=flat&logo=js&logoColor=white" />
+</div>
+  - tailwind, JS
+- 기능라이브러리??
+<div align="left">
+	<img src="https://img.shields.io/badge/django-#092E20?style=flat&logo=Django&logoColor=white" />
+	<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white" />
+	<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=CSS3&logoColor=white" />
 - Web Framework
   - Django 3.x (Python 3.8)
 - FE
