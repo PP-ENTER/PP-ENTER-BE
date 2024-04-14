@@ -8,17 +8,17 @@ class PhotoAdmin(admin.ModelAdmin):
     search_fields = ('content', 'user_id', 'photo_tag')
 
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'photo_id')
+    list_display = ('id', 'author', 'photo')
 
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'photo_id', 'created_at')
+    list_display = ('id', 'author', 'photo')
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'content', 'created_at', 'updated_at')
+    list_display = ('id', 'author', 'content', 'created_at', 'updated_at')
     list_filter = ('created_at', 'updated_at')
-    search_fields = ('content',)
+    search_fields = ('content')
 
-admin.site.register(Photo, PhotoAdmin)
+admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
 admin.site.register(Comment, CommentAdmin)
