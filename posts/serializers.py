@@ -159,6 +159,7 @@ class PhotoTagSerializer(serializers.ModelSerializer):
         return instance
     
 class PostSerializer(serializers.ModelSerializer):
+
     # user = serializers.StringRelatedField(read_only=True)
     # likes = LikeSerializer(many=True, read_only=True)
     # favorites = FavoriteSerializer(many=True, read_only=True)

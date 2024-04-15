@@ -71,8 +71,13 @@ class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+<<<<<<< HEAD
     # def perform_create(self, serializer):
     #     serializer.save(user_id=self.request.user)
+=======
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+>>>>>>> a7065d0a3f12623747973c3181659719229f9766
 
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
