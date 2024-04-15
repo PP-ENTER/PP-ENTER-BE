@@ -82,33 +82,15 @@
 ## 2. 개발 환경 및 배포 URL
 ### 2.1 개발 환경
 - Web Framework
-<div align="left">
-	<img src="https://img.shields.io/badge/django-#092E20?style=flat&logo=Django&logoColor=white" />
-</div>
-- Django 3.x (Python 3.8)
-<div align="left">
-  	<img src="https://img.shields.io/badge/python-#3776AB?style=flat&logo=python&logoColor=white" />
-</div>
-- FE
-<div align="left">
-	<img src="https://img.shields.io/badge/tailwind CSS-#06B6D4?style=flat&logo=tailwindcss&logoColor=white" />
-        <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white" />
-	<img src="https://img.shields.io/badge/JS-#F7DF1E?style=flat&logo=js&logoColor=white" />
-</div>
-  - tailwind, JS
-- 기능라이브러리??
-<div align="left">
-	<img src="https://img.shields.io/badge/django-#092E20?style=flat&logo=Django&logoColor=white" />
-	<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white" />
-	<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=CSS3&logoColor=white" />
-- Web Framework
-  - Django 3.x (Python 3.8)
-- FE
-  - tailwind, JS
-- 기능라이브러리??
-  - Deepface, OpenCV
-- 서비스 배포 환경
-  - Amazon Lightsail
+    - Django 4.2.11 (Python 3.8.10)
+- CSS Framework
+    - Tailwind
+- library
+    - TensorFlow, OpenCV
+- Deployment Environment
+    - Amazon Lightsail
+- Design
+    - Figma
  
 ### 2.2 배포 URL
 - https://www.
