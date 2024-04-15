@@ -18,7 +18,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ('created_at', 'updated_at')
     search_fields = ('content')
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
 admin.site.register(Comment, CommentAdmin)
