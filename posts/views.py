@@ -6,7 +6,7 @@ from .serializers import (
     PostSerializer, LikeSerializer, FavoriteSerializer,
     CommentSerializer, TagSerializer, PhotoTagSerializer
 )
-
+from django.db.models import Q
 
 class CheckLoginView(generics.GenericAPIView):
     authentication_classes = [JWTAuthentication]
@@ -53,14 +53,12 @@ class PostMainListSearchView(generics.ListAPIView):
 
 class PostDetailListSearchView(generics.ListAPIView):
     serializer_class = PostSerializer
- 
+  
     def get_queryset(self):
         # photo_name = self.request.query_params.get('photo_name', None)
         photo_name = self.kwargs['photo_name']
 
         return Photo.objects.all().filter(Q(photo_name__icontains = photo_name)).order_by('-created_at')
-        query = self.request.query_params.get('query', '')
-        return Tag.objects.filter(name__icontains=query)
 
 
 class PostListView(generics.ListAPIView):
@@ -73,8 +71,8 @@ class PostCreateView(generics.CreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(user_id=self.request.user)
 
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
