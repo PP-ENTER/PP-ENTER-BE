@@ -373,10 +373,56 @@ gantt
 ## 6. 와이어프레임 / UI / BM
 
 ### 6.1 와이어프레임
-- 아래 페이지별 상세 설명, 더 큰 이미지로 하나하나씩 설명 필요
-<img src="ui.png" width="60%">
+<table>
+    <tbody>
+        <tr>
+            <td>회원가입</td>
+            <td>로그인</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="회원가입_와이어프레임.png" width="100%">
+            </td>
+            <td>
+                <img src="로그인_와이어프레임.png" width="100%">
+            </td>
+        </tr>
+        <tr>
+            <td>메인</td>
+            <td>프로필</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="메인페이지_와이어프레임.png" width="100%">
+            </td>
+            <td>
+                <img src="프로필_와이어프레임.png" width="100%">
+            </td>
+        </tr>
+        <tr>
+            <td>게시글 작성</td>
+            <td>방 만들기</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="게시글쓰기_와이어프레임.png" width="100%">
+            </td>
+            <td>
+                <img src="방만들기_와이어프레임.png" width="100%">
+            </td>
+        </tr>
+        <tr>
+            <td>화상통화</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="화상통화_와이어프레임.png" width="100%">
+            </td>
+        </tr>
+        
 
-- 와이어 프레임은 디자인을 할 수 있다면 '피그마'를, 디자인을 할 수 없다면 '카카오 오븐'으로 쉽게 만들 수 있습니다.
+    </tbody>
+</table>
 
 ### 6.2 화면 설계
 - 화면은 gif파일로 업로드해주세요.
