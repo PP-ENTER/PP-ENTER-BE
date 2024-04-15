@@ -1,12 +1,12 @@
 from django.urls import path
 from .views import (
-    PostRetrieveUpdateDestroyView,
+    CheckLoginView,PostRetrieveUpdateDestroyView,
     LikeCreateView, LikeDestroyView,
     FavoriteCreateView, FavoriteDestroyView,
     CommentCreateView, CommentUpdateDestroyView,
     TagListCreateView, TagSearchView, TagDestroyView, PhotoTagCreateView, PhotoTagDestroyView,
     PostCreateView, PostListView,
-    PostMainListView, PostDetailListView, PostDetailListSearchView, PostMainListSearchView, 
+    PostMainListView, PostDetailListView, PostDetailListSearchView, PostMainListSearchView
 )
 
 app_name = 'posts'
@@ -25,9 +25,10 @@ urlpatterns = [
     path('tags/search/', TagSearchView.as_view(), name='tag-search'),
     path('tags/<int:pk>/', TagDestroyView.as_view(), name='tag_delete'),
     path('photo_tags/', PhotoTagCreateView.as_view(), name='photo_tag_create'),
-    path('photo_tags/<int:pk>/', PhotoTagDestroyView.as_view(), name='photo_tag_delete'),
+    path('photo_tags/<int:pk>/', PhotoTagDestroyView.as_view(), name='photo_tag_delete'), 
     path('posts_main_list/', PostMainListView.as_view(), name='posts_main_list'),
     path('posts_detail_list/<int:userid>/', PostDetailListView.as_view(), name='posts_detail_list'),
     path('posts_main_list_search/<str:photo_name>/', PostMainListSearchView.as_view(), name='posts_main_list_search'),
     path('posts_detail_list_search/<str:photo_name>/', PostDetailListSearchView.as_view(), name='posts_detail_list_search'),
+    path('check-login/', CheckLoginView.as_view(), name='check_login'),
 ]
