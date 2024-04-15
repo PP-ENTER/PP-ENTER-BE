@@ -163,32 +163,14 @@ class PhotoTagSerializer(serializers.ModelSerializer):
     
 
 class PostSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    likes = LikeSerializer(many=True, read_only=True)
-    favorites = FavoriteSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
-    photo_tags = PhotoTagSerializer(many=True, read_only=True)
-
     class Meta:
         model = Photo
-        fields = (
-            'id', 
-            'user', 
-            'face_chat', 
-            'image_url', 
-            'content', 
-            'likes', 
-            'favorites', 
-            'comments', 
-            'photo_tags', 
-            'count', 
-            'created_at', 
-            'updated_at'
-        )
-        read_only_fields = ('id', 'user', 'likes', 'favorites', 'photo_tags', 'count', 'created_at', 'updated_at')
+        fields = ['user_id', 'face_chat_id', 'image_url', 'photo_name', 'content', 'likes', 'count', 'created_at', 'updated_at']
+        read_only_fields = ['user_id', 'created_at', 'updated_at']
 
     def create(self, validated_data):
-        return Photo.objects.create(**validated_data)
+        photo = Photo.objects.create(**validated_data)
+        return photo
 
     def update(self, instance, validated_data):
         instance.face_chat = validated_data.get('face_chat', instance.face_chat)
