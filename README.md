@@ -54,6 +54,8 @@
 
 - 백엔드 배포 URL
 - http://52.79.54.171/admin/
+- 배포용 레포지터리
+- https://github.com/PP-ENTER/drf-ci-cd
 
   ```
   id : admin 
