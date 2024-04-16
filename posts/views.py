@@ -69,15 +69,10 @@ class PostListView(generics.ListAPIView):
 class PostCreateView(generics.CreateAPIView):
     queryset = Photo.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
-<<<<<<< HEAD
-    # def perform_create(self, serializer):
-    #     serializer.save(user_id=self.request.user)
-=======
     def perform_create(self, serializer):
-        serializer.save(user_id=self.request.user)
->>>>>>> a7065d0a3f12623747973c3181659719229f9766
+        serializer.save(user_id=self.request.user.id)
 
 
 class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

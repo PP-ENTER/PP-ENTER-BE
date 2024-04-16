@@ -169,8 +169,8 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = (
-            'user_id', 
-            'face_chat_id', 
+            # 'user_id',
+            # 'face_chat_id',
             'photo_name',
             'image_url', 
             'content', 
@@ -178,11 +178,11 @@ class PostSerializer(serializers.ModelSerializer):
             'created_at', 
             'updated_at')
         
-        read_only_fields = ('user_id',)
+        # read_only_fields = ('user_id',)
 
     def create(self, validated_data):
         # 'user'를 validated_data에서 제거하고, 요청에서 가져온 사용자를 사용합니다.
         user = self.context['request'].user
-        validated_data.pop('user_id', None)  # 'user_id' 대신 실제 모델에 정의된 필드 이름을 사용하세요.
-        photo = Photo.objects.create(**validated_data, user=user)
+        validated_data['user_id'] = user.id  # 'user_id' 대신 실제 모델에 정의된 필드 이름을 사용하세요.
+        photo = Photo.objects.create(**validated_data)
         return photo
