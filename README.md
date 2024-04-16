@@ -53,7 +53,7 @@
 ### 2.2 배포 URL
 
 - 백엔드 배포 URL
-- http://43.200.108.45/admin/
+- http://52.79.54.171/admin/
 
   ```
   id : admin 
