@@ -68,26 +68,30 @@ class PostListView(generics.ListAPIView):
     serializer_class = PostSerializer
 
 
-class PostCreateView(generics.CreateAPIView):
+class PostCreateView(generics.ListCreateAPIView):
     queryset = Photo.objects.all()
     serializer_class = PostSerializer
     # permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user_id=self.request.user.id)
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
 
 
-class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class PostDetailView(generics.RetrieveAPIView):
     queryset = Photo.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.count += 1
-        instance.save()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    def retrieve(self, request, *args, **kwargs):
+            instance = self.get_object()
+            instance.count += 1
+            instance.save()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+
+class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PostSerializer
 
 
 class LikeCreateView(generics.CreateAPIView):
@@ -169,7 +173,3 @@ class PostListView(generics.ListAPIView):
     def get_queryset(self):
         return Photo.objects.all().order_by('-created_at')[:10]
 
-class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Photo.objects.all()
-    serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly]

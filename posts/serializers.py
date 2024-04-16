@@ -160,17 +160,17 @@ class PhotoTagSerializer(serializers.ModelSerializer):
     
     
 class PostSerializer(serializers.ModelSerializer):
-    is_author = serializers.SerializerMethodField()
+    # is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = Photo
-        fields = ('id', 'user', 'photo_name', 'image_url', 'content', 'count', 'created_at', 'updated_at', 'is_author')
+        fields = ['id', 'user', 'photo_name', 'image_url', 'content', 'count', 'created_at', 'updated_at']
 
-    def get_is_author(self, obj):
-        request = self.context.get('request')
-        return obj.user == request.user if request and request.user.is_authenticated else False
+    # def get_is_author(self, obj):
+    #     request = self.context.get('request')
+    #     return obj.user == request.user if request and request.user.is_authenticated else False
 
-    def create(self, validated_data):
-        # 여기서 'user' 필드를 요청으로부터 직접 설정
-        validated_data['user'] = self.context['request'].user
-        return Photo.objects.create(**validated_data)
+    # def create(self, validated_data):
+    #     # 여기서 'user' 필드를 요청으로부터 직접 설정
+    #     validated_data['user'] = self.context['request'].user
+    #     return Photo.objects.create(**validated_data)
