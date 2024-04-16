@@ -277,15 +277,6 @@ gantt
 
 ```
 
-* 아래 WBS는 엑셀을 이용했습니다. 양식은 [다운로드](./WBS_sample.xlsx) 받아 사용하세요. (출처 : https://techcommunity.microsoft.com/gxcuf89792/attachments/gxcuf89792/ExcelGeneral/204594/1/WBS_sample.xlsx)
-<img src="wbs_xlsx.png" width="80%">
-
-* 좀 더 가벼운 프로젝트는 아래 일정표를 사용하세요.
-* 아래 일정표는 [habitmaker.co.kr](https://habitmaker.co.kr) 에서 작성되었습니다.
-* 관련된 스택 표시는 [dev.habitmaker.co.kr](https://dev.habitmaker.co.kr) 에서 작성되었습니다.
-<img src="habit.jpg" width="50%">
-<img src="blob.png" width="50%">
-
 ## 5. 역할 분담
 
 - 팀장 : 진성현
