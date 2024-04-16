@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    PostRetrieveUpdateDestroyView,
+    CheckLoginView,PostRetrieveUpdateDestroyView,
     LikeCreateView, LikeDestroyView,
     FavoriteCreateView, FavoriteDestroyView,
     CommentCreateView, CommentUpdateDestroyView,
