@@ -4,17 +4,18 @@ from django.db import models
 
 class Photo(models.Model):
     # photo_id = models.AutoField(primary_key=True) # Django는 기본적으로 id필드를 자동으로 추가하여 자동으로 값이 증가 -> 만약 사용자 정의로 필드명을 작성하면 해당 내용처럼 필드명을 작성하고 이렇게 되면 장고는 id값을 자동으로 생성하지x
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='photos') # CustomUser.id(o), CustomUser.user_id(x)
-    face_chat_id = models.ForeignKey('facechats.FaceChat', on_delete=models.CASCADE, related_name='photos') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
-    image_url = models.ImageField()
+    # user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='photos', default=settings.AUTH_USER_MODEL) # CustomUser.id(o), CustomUser.user_id(x)
+    # face_chat_id = models.ForeignKey('facechats.FaceChat', on_deletde=models.CASCADE, related_name='photos') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='photos',
+                             default=settings.AUTH_USER_MODEL, null=True)
+    image_url = models.ImageField(upload_to='photos/', null=True, blank=False)
+    photo_name = models.TextField()
     content = models.CharField(max_length=255, blank=True, null=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, through="Like", related_name="liked_posts")
     count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-            return f"{self.user.username}'s post ({self.created_at})"
 
 
 class Like(models.Model):

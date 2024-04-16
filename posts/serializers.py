@@ -1,6 +1,3 @@
-# serializers.py : 장고 모델 데이터를 json 타입으로 바꿔주는 작업
-# https://codemonkyu.tistory.com/entry/Djnago-Django-rest-framework-%ED%99%9C%EC%9A%A9%ED%95%98%EC%97%AC-API-%EC%84%9C%EB%B2%84-%EB%A7%8C%EB%93%A4%EA%B8%B0
-
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -129,7 +126,7 @@ def create(self, validated_data):
     tag, created = Tag.objects.get_or_create(**validated_data)
     if not created:
         raise serializers.ValidationError("이미 존재하는 태그입니다.")
-    return tag
+        return tag
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
@@ -161,37 +158,31 @@ class PhotoTagSerializer(serializers.ModelSerializer):
         instance.delete()
         return instance
     
-
 class PostSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    likes = LikeSerializer(many=True, read_only=True)
-    favorites = FavoriteSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True)
-    photo_tags = PhotoTagSerializer(many=True, read_only=True)
+
+    # user = serializers.StringRelatedField(read_only=True)
+    # likes = LikeSerializer(many=True, read_only=True)
+    # favorites = FavoriteSerializer(many=True, read_only=True)
+    # comments = CommentSerializer(many=True)
+    # photo_tags = PhotoTagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Photo
         fields = (
-            'id', 
-            'user', 
-            'face_chat', 
+            # 'user_id',
+            # 'face_chat_id',
+            'photo_name',
             'image_url', 
             'content', 
-            'likes', 
-            'favorites', 
-            'comments', 
-            'photo_tags', 
             'count', 
             'created_at', 
             'updated_at')
+        
+        # read_only_fields = ('user_id',)
 
     def create(self, validated_data):
-        post = post.objects.create(**validated_data)
-        return post
-
-    def update(self, instance, validated_data):
-        instance.face_chat_id = validated_data.get('face_chat_id', instance.face_chat_id)
-        instance.image_url = validated_data.get('image_url', instance.image_url)
-        instance.content = validated_data.get('content', instance.content)
-        instance.save()
-        return instance
+        # 'user'를 validated_data에서 제거하고, 요청에서 가져온 사용자를 사용합니다.
+        user = self.context['request'].user
+        validated_data['user_id'] = user.id  # 'user_id' 대신 실제 모델에 정의된 필드 이름을 사용하세요.
+        photo = Photo.objects.create(**validated_data)
+        return photo
