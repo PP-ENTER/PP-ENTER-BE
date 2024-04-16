@@ -30,10 +30,10 @@
 		<th>진성현</th>
 	</tr>
  	<tr>
-		<td><img src="my.jpg" width="100%"></td>
-		<td><img src="my.jpg" width="100%"></td>
-		<td><img src="my.jpg" width="100%"></td>
-		<td><img src="my.jpg" width="100%"></td>
+		<td><img src="박상현.jpg" width="1000%"></td>
+		<td><img src="엄영철.jpg" width="1000%"></td>
+		<td><img src="이은희.png" width="1000%"></td>
+		<td><img src="진성현.png" width="1000%"></td>
 	</tr>
 </table>
 
