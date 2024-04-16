@@ -60,45 +60,55 @@
 
 ### 2.3 URL 구조(마이크로식)
 
+**accounts** 
 
-| URL 패턴 | 뷰 클래스 | 설명 |
-|----------|-----------|------|
-| **계정 (accounts)** |
-| `register/` | `RegisterView` | 회원가입 기능 |
-| `login/` | `LoginView` | 로그인 기능 |
-| `logout/` | `LogoutView` (mixins: `LogoutMixin`) | 로그아웃 기능 |
-| `profile/` | `UserProfileView` | 사용자 프로필 정보 조회 및 수정 |
-| `password/change/` | `PasswordChangeView` (mixins: `PasswordChangeFormMixin`) | 비밀번호 변경 기능 |
-| **게시물 (posts)** |
-| `posts/` | `PostListView` | 게시물 목록 조회 |
-| `posts/create/` | `PostCreateView` | 새로운 게시물 작성 |
-| `posts/<int:pk>/` | `PostDetailView` | 개별 게시물 상세 정보 조회 |
-| `posts/<int:pk>/update/` | `PostUpdateView` | 게시물 수정 |
-| `posts/<int:pk>/delete/` | `PostDeleteView` | 게시물 삭제 |
-| `posts/<int:pk>/like/` | `PostLikeView` (mixins: `LikeMixin`) | 게시물 좋아요 기능 |
-| `posts/<int:pk>/favorite/` | `PostFavoriteView` (mixins: `FavoriteMixin`) | 게시물 즐겨찾기 기능 |
-| `posts/<int:pk>/tags/` | `PostTagListView` | 게시물 태그 목록 조회 |
-| `posts/<int:pk>/tags/create/` | `PostTagCreateView` | 게시물 태그 추가 |
-| `posts/<int:pk>/tags/<int:tag_pk>/delete/` | `PostTagDeleteView` | 게시물 태그 삭제 |
-| `posts/<int:pk>/comments/` | `CommentListView` | 게시물 댓글 목록 조회 |
-| `posts/<int:pk>/comments/create/` | `CommentCreateView` | 새로운 댓글 작성 |
-| `posts/<int:pk>/comments/<int:comment_pk>/update/` | `CommentUpdateView` | 댓글 수정 |
-| `posts/<int:pk>/comments/<int:comment_pk>/delete/` | `CommentDeleteView` | 댓글 삭제 |
-| **친구 (friends)** |
-| `friends/` | `FriendListView` | 친구 목록 조회 |
-| `friends/requests/` | `FriendRequestListView` | 친구 요청 목록 조회 |
-| `friends/requests/<int:pk>/accept/` | `FriendRequestAcceptView` (mixins: `FriendRequestMixin`) | 친구 요청 수락 |
-| `friends/requests/<int:pk>/reject/` | `FriendRequestRejectView` (mixins: `FriendRequestMixin`) | 친구 요청 거절 |
-| `friends/<int:pk>/remove/` | `FriendRemoveView` (mixins: `FriendRemoveMixin`) | 친구 삭제 |
-| **실시간 채팅 (facechats)** |
-| `facechats/` | `FaceChatListView` | 실시간 채팅방 목록 조회 |
-| `facechats/create/` | `FaceChatCreateView` | 새로운 실시간 채팅방 생성 |
-| `facechats/<int:pk>/` | `FaceChatDetailView` | 개별 실시간 채팅방 정보 조회 |
-| `facechats/<int:pk>/join/` | `FaceChatJoinView` (mixins: `FaceChatMixin`) | 실시간 채팅방 참가 |
-| `facechats/<int:pk>/leave/` | `FaceChatLeaveView` (mixins: `FaceChatMixin`) | 실시간 채팅방 나가기 |
-| `facechats/<int:pk>/messages/` | `FaceChatMessageListView` | 실시간 채팅 메시지 목록 조회 |
-| `facechats/<int:pk>/messages/create/` | `FaceChatMessageCreateView` | 새로운 실시간 채팅 메시지 생성 |
+| Method | URL Pattern | View Name | Description | Authentication | Permission |
+|--------|-------------|-----------|-------------|---------------|------------|
+| POST | /register/ | RegisterView | 새로운 사용자 등록 | - | - |
+| POST | /login/ | LoginView | 사용자 로그인 | - | - |
+| POST | /refresh/ | TokenRefreshView | Access Token 갱신 | ✅  | ✅  |
+| PUT | /update/ | UserUpdateView | 사용자 정보 업데이트 | ✅  | ✅|
+| POST | /friend-request/ | FriendRequestView | 친구 요청 보내기 | ✅  | ✅|
+| POST | /friend-requests/<int:friend_request_id>/accept/ | AcceptFriendRequestView | 친구 요청 수락 | ✅ | ✅|
+| GET | /profile/<int:pk>/ | ProfileView | 사용자 프로필 조회 | - | - |
+| GET | /friends/ | FriendView | 친구 목록 조회 | ✅  | ✅  |
+| POST | /friends/ | FriendView | 친구 추가 | ✅  | ✅  |
 
+**facechats**
+
+| Method | URL Pattern | View Name | Description | Authentication | Permission |
+|--------|-------------|-----------|-------------|---------------|------------|
+| GET | / | facechat_list | 페이스챗 목록 조회 | - | - |
+| GET | /<int:pk>/ | facechat_detail | 특정 페이스챗 상세 조회 | - | - |
+| POST | /create_facechat/ | facechat_create | 새로운 페이스챗 생성 | ✅  | ✅  |
+| PUT | /<int:pk>/ | facechat_update | 특정 페이스챗 수정 | ✅  | ✅  |
+| DELETE | /<int:pk>/ | facechat_delete | 특정 페이스챗 삭제 | ✅  | ✅  |
+| POST | /<int:pk>/join/ | facechat_join | 특정 페이스챗에 참여 | ✅  | - |
+| POST | /<int:pk>/exit/ | facechat_exit | 특정 페이스챗에서 퇴장 | ✅  | - |
+
+**posts** 
+
+| Method | URL Pattern | View Name | Description | Authentication | Permission |
+|--------|-------------|-----------|-------------|---------------|------------|
+| GET | /posts/ | PostListView | 최근 10개의 포스트 목록을 가져옵니다. | - | - |
+| POST | /create/ | PostCreateView | 새로운 포스트를 생성합니다. | ✅  | - |
+| GET, PUT, DELETE | /posts/<int:pk>/ | PostRetrieveUpdateDestroyView | 특정 포스트의 상세 정보를 조회, 수정, 삭제합니다. | ✅  (PUT, DELETE) | Owner (PUT, DELETE) |
+| POST | /likes/ | LikeCreateView | 좋아요를 생성합니다. | ✅ | - |
+| DELETE | /likes/<int:pk>/ | LikeDestroyView | 특정 좋아요를 삭제합니다. | ✅  | ✅  |
+| POST | /favorites/ | FavoriteCreateView | 즐겨찾기를 생성합니다. | ✅ | - |
+| DELETE | /favorites/<int:pk>/ | FavoriteDestroyView | 특정 즐겨찾기를 삭제합니다. | ✅  | ✅  |
+| POST | /comments/ | CommentCreateView | 댓글을 생성합니다. | ✅  | - |
+| PUT, DELETE | /comments/<int:pk>/ | CommentUpdateDestroyView | 특정 댓글을 수정, 삭제합니다. | ✅ | ✅ |
+| GET, POST | /tags/ | TagListCreateView | 태그 목록을 가져오고 새로운 태그를 생성합니다. | ✅ | - |
+| GET | /tags/search/ | TagSearchView | 태그를 검색합니다. | - | - |
+| DELETE | /tags/<int:pk>/ | TagDestroyView | 특정 태그를 삭제합니다. | ✅ | ✅ |
+| POST | /photo_tags/ | PhotoTagCreateView | 포토 태그를 생성합니다. | ✅ | ✅  |
+| DELETE | /photo_tags/<int:pk>/ | PhotoTagDestroyView | 특정 포토 태그를 삭제합니다. | ✅ | ✅ |
+| GET | /posts_main_list/ | PostMainListView | 메인 페이지에서 최근 10개의 포스트 목록을 가져옵니다. | - | - |
+| GET | /posts_detail_list/<int:userid>/ | PostDetailListView | 특정 사용자의 포스트 목록을 가져옵니다. | - | - |
+| GET | /posts_main_list_search/<str:photo_name>/ | PostMainListSearchView | 메인 페이지에서 포토 이름으로 포스트를 검색합니다. | - | - |
+| GET | /posts_detail_list_search/<str:photo_name>/ | PostDetailListSearchView | 상세 페이지에서 포토 이름으로 포스트를 검색합니다. | - | - |
+| GET | /check-login/ | CheckLoginView | 사용자의 로그인 상태를 확인합니다. | ✅  | - |
 
 ## 3. 요구사항 명세와 기능 명세
 
