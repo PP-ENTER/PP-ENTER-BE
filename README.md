@@ -358,63 +358,63 @@ gantt
 <table>
     <tbody>
         <tr>
-            <td>메인</td>
+            <td>회원가입</td>
             <td>로그인</td>
         </tr>
         <tr>
             <td>
-		<img src="ui1.png" width="100%">
+        <img src="회원가입.gif" width="100%">
             </td>
             <td>
-                <img src="ui2.png" width="100%">
+                <img src="로그인.gif" width="100%">
             </td>
         </tr>
         <tr>
-            <td>회원가입</td>
-            <td>정보수정</td>
+            <td>메인페이지</td>
+            <td>메인페이지 더보기</td>
+            <td>세부내역클릭</td>
         </tr>
         <tr>
             <td>
-                <img src="ui3.png" width="100%">
+                <img src="메인페이지.gif" width="100%">
             </td>
             <td>
-                <img src="ui3.png" width="100%">
+                <img src="더보기_세부.gif" width="100%">
+            </td>
+            <td>
+                <img src="세부내역클릭_세부페이지(1page).gif" width="100%">
             </td>
         </tr>
         <tr>
+            <td>페이스챗 방 만들기(발신자)</td>
+            <td>전화받기(수신자)</td>
+            <td>채팅하기</td>
+        </tr>
+        <tr>
+            <td>
+            <img src="방만들기(발신자).gif" width="100%">
+            </td>
+            <td>
+                <img src="방만들기(수신자).gif" width="100%">
+            </td>
+            <td>
+                <img src="채팅_대화.gif" width="100%">
+            </td>
+        </tr>
+        <tr>
+            <td>게시글 작성</td>
             <td>검색</td>
-            <td>번역</td>
+            <td>게시글 삭제</td>
         </tr>
         <tr>
             <td>
-                <img src="ui3.png" width="100%">
+                <img src="게시글작성.gif" width="100%">
             </td>
             <td>
-                <img src="ui3.png" width="100%">
-            </td>
-        </tr>
-        <tr>
-            <td>선택삭제</td>
-            <td>글쓰기</td>
-        </tr>
-        <tr>
-            <td>
-	        <img src="ui3.png" width="100%">
+                <img src="검색.gif" width="100%">
             </td>
             <td>
-                <img src="ui3.png" width="100%">
-            </td>
-        </tr>
-        <tr>
-            <td>글 상세보기</td>
-            <td>댓글</td>
-        </tr>
-        <tr>
-            <td>
-                <img src="ui3.png" width="100%">
-            </td>
-            <td>
-                <img src="ui3.png" width="100%">
+                <img src="" width="100%">
             </td>
         </tr>
     </tbody>
