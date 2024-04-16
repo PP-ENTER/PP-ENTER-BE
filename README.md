@@ -134,111 +134,134 @@
 
 ## 4. 프로젝트 구조와 개발 일정
 ### 4.1 프로젝트 구조
-- 해당 프로젝트에서 폴더 트리 잘 다듬어 사용하세요. 필요하다면 주석을 달아주세요.
-📦tutorial  
- ┣ 📂accounts  
- ┃ ┣ 📂migrations  
- ┃ ┣ 📂__pycache__  
- ┃ ┣ 📜admin.py  
- ┃ ┣ 📜apps.py  
- ┃ ┣ 📜forms.py  
- ┃ ┣ 📜models.py  
- ┃ ┣ 📜tests.py  
- ┃ ┣ 📜urls.py  
- ┃ ┣ 📜views.py  
- ┃ ┗ 📜__init__.py  
- ┣ 📂blog  
- ┃ ┣ 📂migrations  
- ┃ ┣ 📂__pycache__  
- ┃ ┣ 📜admin.py  
- ┃ ┣ 📜apps.py  
- ┃ ┣ 📜forms.py  
- ┃ ┣ 📜models.py  
- ┃ ┣ 📜tests.py  
- ┃ ┣ 📜urls.py  
- ┃ ┣ 📜views.py  
- ┃ ┗ 📜__init__.py  
- ┣ 📂board  
- ┃ ┣ 📂migrations  
- ┃ ┣ 📂__pycache__  
- ┃ ┣ 📜admin.py  
- ┃ ┣ 📜apps.py  
- ┃ ┣ 📜forms.py  
- ┃ ┣ 📜models.py  
- ┃ ┣ 📜tests.py  
- ┃ ┣ 📜urls.py  
- ┃ ┣ 📜views.py  
- ┃ ┗ 📜__init__.py  
- ┣ 📂main  
- ┃ ┣ 📂migrations  
- ┃ ┣ 📂__pycache__  
- ┃ ┣ 📜admin.py  
- ┃ ┣ 📜apps.py  
- ┃ ┣ 📜models.py  
- ┃ ┣ 📜tests.py  
- ┃ ┣ 📜urls.py  
- ┃ ┣ 📜views.py  
- ┃ ┗ 📜__init__.py  
- ┣ 📂media  
- ┃ ┣ 📂accounts  
- ┃ ┣ 📂blog  
- ┃ ┗ 📂board  
- ┣ 📂static  
- ┃ ┣ 📂assets  
- ┃ ┃ ┣ 📂css  
- ┃ ┃ ┃ ┣ 📂apps  
- ┃ ┃ ┃ ┣ 📂authentication  
- ┃ ┃ ┃ ┣ 📂components  
- ┃ ┃ ┃ ┣ 📂dashboard  
- ┃ ┃ ┃ ┣ 📂elements  
- ┃ ┃ ┃ ┣ 📂forms  
- ┃ ┃ ┃ ┣ 📂pages  
- ┃ ┃ ┃ ┣ 📂tables  
- ┃ ┃ ┃ ┣ 📂users  
- ┃ ┃ ┣ 📂images  
- ┃ ┃ ┃ ┣ 📂mockup_image  
- ┃ ┃ ┣ 📂img  
- ┃ ┃ ┗ 📂js  
- ┃ ┣ 📂bootstrap  
- ┃ ┃ ┣ 📂css  
- ┃ ┃ ┗ 📂js  
- ┃ ┗ 📂plugins  
- ┣ 📂tech_blog  
- ┃ ┣ 📂__pycache__  
- ┃ ┣ 📜.env  
- ┃ ┣ 📜asgi.py  
- ┃ ┣ 📜settings.py  
- ┃ ┣ 📜urls.py  
- ┃ ┣ 📜wsgi.py  
- ┃ ┗ 📜__init__.py  
- ┣ 📂templates  
- ┃ ┣ 📂accounts  
- ┃ ┃ ┣ 📜login.html  
- ┃ ┃ ┣ 📜password_change.html  
- ┃ ┃ ┣ 📜profile.html  
- ┃ ┃ ┣ 📜profile_edit.html  
- ┃ ┃ ┣ 📜signup.html  
- ┃ ┃ ┗ 📜user_list.html  
- ┃ ┣ 📂blog  
- ┃ ┃ ┣ 📜blog_base.html  
- ┃ ┃ ┣ 📜post_detail.html  
- ┃ ┃ ┣ 📜post_form.html  
- ┃ ┃ ┣ 📜post_list.html  
- ┃ ┃ ┗ 📜post_not_found.html  
- ┃ ┣ 📂board  
- ┃ ┃ ┣ 📜board_base.html  
- ┃ ┃ ┣ 📜board_post_detail.html  
- ┃ ┃ ┣ 📜board_post_form.html  
- ┃ ┃ ┗ 📜board_post_list.html  
- ┃ ┣ 📂main  
- ┃ ┃ ┗ 📜index.html  
- ┃ ┣ 📜404.html  
- ┃ ┗ 📜base.html  
- ┣ 📜CONVENTION.md  
- ┣ 📜db.sqlite3  
- ┣ 📜manage.py  
- ┣ 📜README.md  
- ┗ 📜requirements.txt  
+
+    - 1. **BE**
+
+        ```
+         ┣ 📂accounts
+         ┃ ┣ 📂migrations
+         ┃ ┃ ┗ 📜__init__.py
+         ┃ ┣ 📜admin.py
+         ┃ ┣ 📜apps.py
+         ┃ ┣ 📜models.py
+         ┃ ┣ 📜permissions.py
+         ┃ ┣ 📜serializers.py
+         ┃ ┣ 📜tests.py
+         ┃ ┣ 📜urls.py
+         ┃ ┣ 📜views.py
+         ┃ ┗ 📜__init__.py
+         ┣ 📂config
+         ┃ ┣ 📜asgi.py
+         ┃ ┣ 📜settings.py
+         ┃ ┣ 📜urls.py
+         ┃ ┣ 📜wsgi.py
+         ┃ ┗ 📜__init__.py
+         ┣ 📂facechats
+         ┃ ┣ 📂migrations
+         ┃ ┃ ┗ 📜__init__.py
+         ┃ ┣ 📜admin.py
+         ┃ ┣ 📜apps.py
+         ┃ ┣ 📜consumers.py
+         ┃ ┣ 📜models.py
+         ┃ ┣ 📜routing.py
+         ┃ ┣ 📜tests.py
+         ┃ ┣ 📜urls.py
+         ┃ ┣ 📜views.py
+         ┃ ┗ 📜__init__.py
+         ┣ 📂media
+         ┃ ┗ 📜default.png
+         ┣ 📂nginx
+         ┃ ┣ 📜Dockerfile
+         ┃ ┗ 📜nginx.conf
+         ┣ 📂notices
+         ┃ ┣ 📂migrations
+         ┃ ┃ ┗ 📜__init__.py
+         ┃ ┣ 📜admin.py
+         ┃ ┣ 📜apps.py
+         ┃ ┣ 📜models.py
+         ┃ ┣ 📜tests.py
+         ┃ ┣ 📜views.py
+         ┃ ┗ 📜__init__.py
+         ┣ 📂posts
+         ┃ ┣ 📂migrations
+         ┃ ┃ ┗ 📜__init__.py
+         ┃ ┣ 📜admin.py
+         ┃ ┣ 📜apps.py
+         ┃ ┣ 📜models.py
+         ┃ ┣ 📜serializers.py
+         ┃ ┣ 📜tests.py
+         ┃ ┣ 📜urls.py
+         ┃ ┣ 📜views.py
+         ┃ ┗ 📜__init__.py
+         ┣ 📜.env.dev
+         ┣ 📜.gitattributes
+         ┣ 📜.gitignore
+         ┣ 📜docker-compose.dev.yml
+         ┣ 📜docker-compose.yml
+         ┣ 📜Dockerfile
+         ┣ 📜manage.py
+         ┣ 📜README.md
+         ┣ 📜requirements.txt
+         ┣ 📜게시글쓰기_와이어프레임.png
+         ┣ 📜로그인_와이어프레임.png
+         ┣ 📜메인페이지_와이어프레임.png
+         ┣ 📜방만들기_와이어프레임.png
+         ┣ 📜프로필_와이어프레임.png
+         ┣ 📜화상통화_와이어프레임.png
+         ┗ 📜회원가입_와이어프레임.png
+        ```
+
+    - 2. **FE**
+        
+        ```
+        
+         ┣ 📂accounts
+         ┃ ┣ 📜login.html
+         ┃ ┣ 📜profile.html
+         ┃ ┗ 📜register.html
+         ┣ 📂facechats
+         ┃ ┣ 📜facechat.html
+         ┃ ┣ 📜facechat_2.html
+         ┃ ┗ 📜facechat_원본.html
+         ┣ 📂media
+         ┃ ┗ 📂img
+         ┃ ┃ ┣ 📜img_logo.png
+         ┃ ┃ ┣ 📜img_person_1.png
+         ┃ ┃ ┣ 📜img_person_2.png
+         ┃ ┃ ┣ 📜img_person_3.png
+         ┃ ┃ ┗ 📜img_person_4.png
+         ┣ 📂posts
+         ┃ ┣ 📜post_create.html
+         ┃ ┣ 📜post_detail.html
+         ┃ ┣ 📜post_list.html
+         ┃ ┗ 📜post_update.html
+         ┣ 📂posts_uni
+         ┣ 📂static
+         ┃ ┣ 📂assets
+         ┃ ┃ ┗ 📂img
+         ┃ ┃ ┃ ┣ 📜img_logo.png
+         ┃ ┃ ┃ ┣ 📜img_profile.jpg
+         ┃ ┃ ┃ ┣ 📜img_slider1.png
+         ┃ ┃ ┃ ┣ 📜img_slider2.png
+         ┃ ┃ ┃ ┣ 📜img_slider3.png
+         ┃ ┃ ┃ ┗ 📜profile.png
+         ┃ ┣ 📂css
+         ┃ ┃ ┣ 📜style.css
+         ┃ ┃ ┗ 📜tailwind_custom.css
+         ┃ ┗ 📂js
+         ┃ ┃ ┣ 📜app.js
+         ┃ ┃ ┣ 📜call.js
+         ┃ ┃ ┣ 📜create_card.js
+         ┃ ┃ ┣ 📜create_post_template.js
+         ┃ ┃ ┣ 📜create_room.js
+         ┃ ┃ ┣ 📜link.js
+         ┃ ┃ ┣ 📜login.js
+         ┃ ┃ ┣ 📜post_create.js
+         ┃ ┃ ┣ 📜post_update.js
+         ┃ ┃ ┣ 📜signup.JS
+         ┃ ┃ ┗ 📜slider-img.js
+         ┗ 📜README.md
+        ```
 
 ### 4.1 개발 일정(WBS)
 * 아래 일정표는 머메이드로 작성했습니다.
