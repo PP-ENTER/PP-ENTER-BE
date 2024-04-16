@@ -14,19 +14,12 @@ class CustomUser(AbstractUser):
 
 
 class Friend(models.Model):
-    user_id = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="friends"
-    )
-    friend_id = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="friends_of"
-    )
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
+    friend_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (
-            "user_id",
-            "friend_id",
-        )
+        unique_together = ('user_id', 'friend_id',)
 
     def __str__(self):
         return f"{self.user_id} : {self.friend_id}"

@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -22,6 +22,7 @@ User = get_user_model()
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -38,6 +39,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
+    permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
     def post(self, request):
@@ -48,12 +50,13 @@ class LoginView(TokenObtainPairView):
         access = serializer.validated_data["access"]
         return Response(
             {
-                "username": user.username,
-                "nickname": user.nickname,
-                "refresh": str(refresh),
-                "access": str(access),
-            },
-            status=status.HTTP_200_OK,
+             'userid': user.id,
+             'username': user.username,
+             'nickname': user.nickname,
+             'refresh': str(refresh),
+             'access': str(access),
+             },
+            status=status.HTTP_200_OK
         )
 
 
