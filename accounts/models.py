@@ -14,22 +14,22 @@ class CustomUser(AbstractUser):
 
 
 class Friend(models.Model):
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
-    friend_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
+    friend = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('user_id', 'friend_id',)
 
     def __str__(self):
-        return f"{self.user_id} : {self.friend_id}"
+        return f"{self.user} : {self.friend}"
 
 
 class FriendRequest(models.Model):
-    from_user_id = models.ForeignKey(
+    from_user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="sent_friend_requests"
     )
-    to_user_id = models.ForeignKey(
+    to_user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="received_friend_requests"
     )
     status = models.BooleanField(
@@ -44,4 +44,4 @@ class FriendRequest(models.Model):
         )
 
     def __str__(self):
-        return f"{self.from_user_id} -> {self.to_user_id}"
+        return f"{self.from_user} -> {self.to_user}"
