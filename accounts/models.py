@@ -6,31 +6,49 @@ from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=255, unique=False)  # 닉네임
-    profile_image = models.ImageField(upload_to='profile/', null=True, blank=True)  # 프로필 이미지
-    is_active = models.BooleanField(default=True) # 현재 접속 여부
+    profile_image = models.ImageField(
+        upload_to="profile/", null=True, blank=True
+    )  # 프로필 이미지
+    is_active = models.BooleanField(default=True)  # 현재 접속 여부
     updated_at = models.DateTimeField(auto_now=True)  # 수정일
 
 
-class Friend(models.Model): 
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends')
-    friend_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='friends_of')
+class Friend(models.Model):
+    user_id = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="friends"
+    )
+    friend_id = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="friends_of"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user_id', 'friend_id',)
+        unique_together = (
+            "user_id",
+            "friend_id",
+        )
 
     def __str__(self):
-        return f'{self.user_id} : {self.friend_id}'
+        return f"{self.user_id} : {self.friend_id}"
 
 
 class FriendRequest(models.Model):
-    from_user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_friend_requests')
-    to_user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_friend_requests')
-    status = models.BooleanField(default=False)  # 현재 상태 -> False: 요청중, True: 수락
+    from_user_id = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="sent_friend_requests"
+    )
+    to_user_id = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="received_friend_requests"
+    )
+    status = models.BooleanField(
+        default=False
+    )  # 현재 상태 -> False: 요청중, True: 수락
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('from_user_id', 'to_user_id',)
+        unique_together = (
+            "from_user_id",
+            "to_user_id",
+        )
 
     def __str__(self):
-        return f'{self.from_user_id} -> {self.to_user_id}'
+        return f"{self.from_user_id} -> {self.to_user_id}"
