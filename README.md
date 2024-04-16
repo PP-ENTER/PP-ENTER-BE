@@ -44,7 +44,7 @@
 - CSS Framework
     - Tailwind
 - library
-    - TensorFlow, OpenCV
+    - TensorFlow, OpenCV, PyTorch
 - Deployment Environment
     - Amazon Lightsail
 - Design
