@@ -173,15 +173,6 @@
          ┣ 📂nginx
          ┃ ┣ 📜Dockerfile
          ┃ ┗ 📜nginx.conf
-         ┣ 📂notices
-         ┃ ┣ 📂migrations
-         ┃ ┃ ┗ 📜__init__.py
-         ┃ ┣ 📜admin.py
-         ┃ ┣ 📜apps.py
-         ┃ ┣ 📜models.py
-         ┃ ┣ 📜tests.py
-         ┃ ┣ 📜views.py
-         ┃ ┗ 📜__init__.py
          ┣ 📂posts
          ┃ ┣ 📂migrations
          ┃ ┃ ┗ 📜__init__.py
