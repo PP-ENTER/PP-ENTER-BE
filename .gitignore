@@ -168,10 +168,4 @@ cython_debug/
 
 # media files
 media/
-
-# static files
-static/
-
-# docker
-.env.prod
-.env.prod.db
+static/*
