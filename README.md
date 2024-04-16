@@ -51,11 +51,14 @@
     - Figma
  
 ### 2.2 배포 URL
-- https://www.
-- 테스트용 계정
+
+- 백엔드 배포 URL
+- http://43.200.108.45/admin/
+
   ```
-  id : test@test.test
-  pw : test11!!
+  id : admin 
+  pw : test1234!
+
   ```
 
 ### 2.3 URL 구조(마이크로식)
