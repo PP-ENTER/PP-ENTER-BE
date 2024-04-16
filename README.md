@@ -271,6 +271,7 @@ gantt
     section 기획 및 설계
     요구사항 분석 : des3, 2024-03-29, 3d
     기능 명세서 작성 : des4, after des3, 2d
+    감정분석 툴 개발 : after des3, 4d
     UI/UX 설계 : des5, after des4, 3d
     데이터베이스 설계 : des6, after des4, 3d
 
