@@ -214,7 +214,6 @@
     - 2. 📦PP-ENTER-FE
         
         ```
-        
          ┣ 📂accounts
          ┃ ┣ 📜login.html
          ┃ ┣ 📜profile.html
