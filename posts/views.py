@@ -8,6 +8,8 @@ from .serializers import (
 )
 from django.db.models import Q
 
+from .permission import IsAuthorOrReadOnly
+
 class CheckLoginView(generics.GenericAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -166,3 +168,8 @@ class PostListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Photo.objects.all().order_by('-created_at')[:10]
+
+class PostDetailUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthorOrReadOnly]
