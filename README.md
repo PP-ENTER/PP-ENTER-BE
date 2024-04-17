@@ -51,6 +51,12 @@
     - Figma
  
 ### 2.2 배포 URL
+- 프론트엔드 배포 URL
+- https://pp-enter.github.io/PP-ENTER-FE/posts/post_list
+  ```
+  id : admin 
+  pw : test1234!
+  ```
 
 - 백엔드 배포 URL
 - http://43.201.47.166/admin/
