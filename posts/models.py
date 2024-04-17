@@ -9,11 +9,7 @@ class Photo(models.Model):
     # user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='photos', default=settings.AUTH_USER_MODEL) # CustomUser.id(o), CustomUser.user_id(x)
     # face_chat_id = models.ForeignKey('facechats.FaceChat', on_deletde=models.CASCADE, related_name='photos') # facechats > models.py에서 posts의 Tag를 import하고 있기에 여기서 FaceChat 모델을 import하면 에러..
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="photos",
-        default=settings.AUTH_USER_MODEL,
-        null=True,
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="photos"
     )
     image_url = models.ImageField(upload_to="photos/", null=True, blank=False)
     photo_name = models.TextField()

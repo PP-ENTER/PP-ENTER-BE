@@ -166,33 +166,26 @@ class PhotoTagSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-
-    # user = serializers.StringRelatedField(read_only=True)
-    # likes = LikeSerializer(many=True, read_only=True)
-    # favorites = FavoriteSerializer(many=True, read_only=True)
-    # comments = CommentSerializer(many=True)
-    # photo_tags = PhotoTagSerializer(many=True, read_only=True)
+    # is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = Photo
-        fields = (
-            # 'user_id',
-            # 'face_chat_id',
+        fields = [
+            "id",
+            "user",
             "photo_name",
             "image_url",
             "content",
             "count",
             "created_at",
             "updated_at",
-        )
+        ]
 
-        # read_only_fields = ('user_id',)
+    # def get_is_author(self, obj):
+    #     request = self.context.get('request')
+    #     return obj.user == request.user if request and request.user.is_authenticated else False
 
-    def create(self, validated_data):
-        # 'user'를 validated_data에서 제거하고, 요청에서 가져온 사용자를 사용합니다.
-        user = self.context["request"].user
-        validated_data["user_id"] = (
-            user.id
-        )  # 'user_id' 대신 실제 모델에 정의된 필드 이름을 사용하세요.
-        photo = Photo.objects.create(**validated_data)
-        return photo
+    # def create(self, validated_data):
+    #     # 여기서 'user' 필드를 요청으로부터 직접 설정
+    #     validated_data['user'] = self.context['request'].user
+    #     return Photo.objects.create(**validated_data)
