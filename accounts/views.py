@@ -50,13 +50,13 @@ class LoginView(TokenObtainPairView):
         access = serializer.validated_data["access"]
         return Response(
             {
-             'userid': user.id,
-             'username': user.username,
-             'nickname': user.nickname,
-             'refresh': str(refresh),
-             'access': str(access),
-             },
-            status=status.HTTP_200_OK
+                "userid": user.id,
+                "username": user.username,
+                "nickname": user.nickname,
+                "refresh": str(refresh),
+                "access": str(access),
+            },
+            status=status.HTTP_200_OK,
         )
 
 

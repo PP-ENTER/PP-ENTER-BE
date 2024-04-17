@@ -11,14 +11,14 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = (
-            'id', 
-            'author', 
-            'photo', 
+            "id",
+            "author",
+            "photo",
         )
 
     def create(self, validated_data):
-        user = self.context['request'].user
-        post = validated_data['post']
+        user = self.context["request"].user
+        post = validated_data["post"]
         like, created = Like.objects.get_or_create(user=user, post=post)
         if not created:
             raise serializers.ValidationError("이미 좋아요를 누른 게시글입니다.")
@@ -27,9 +27,11 @@ class LikeSerializer(serializers.ModelSerializer):
         return like
 
     def delete(self, instance):
-        user = self.context['request'].user
+        user = self.context["request"].user
         if instance.user != user:
-            raise serializers.ValidationError("자신이 좋아요한 게시글만 취소할 수 있습니다.")
+            raise serializers.ValidationError(
+                "자신이 좋아요한 게시글만 취소할 수 있습니다."
+            )
         post = instance.post
         post.count -= 1
         post.save()
@@ -41,23 +43,25 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = (
-            'id', 
-            'author', 
-            'photo', 
-            )
+            "id",
+            "author",
+            "photo",
+        )
 
     def create(self, validated_data):
-        user = self.context['request'].user
-        post = validated_data['post']
+        user = self.context["request"].user
+        post = validated_data["post"]
         favorite, created = Favorite.objects.get_or_create(user=user, post=post)
         if not created:
             raise serializers.ValidationError("이미 즐겨찾기한 게시글입니다.")
         return favorite
 
     def delete(self, instance):
-        user = self.context['request'].user
+        user = self.context["request"].user
         if instance.user != user:
-            raise serializers.ValidationError("자신이 즐겨찾기한 게시글만 해제할 수 있습니다.")
+            raise serializers.ValidationError(
+                "자신이 즐겨찾기한 게시글만 해제할 수 있습니다."
+            )
         instance.delete()
         return instance
 
@@ -65,17 +69,18 @@ class FavoriteSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     replies = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
         fields = (
-            'id', 
-            'author', 
-            'content', 
-            'created_at', 
-            'updated_at', 
-            'parent_id',
-            'photo'
-            )
+            "id",
+            "author",
+            "content",
+            "created_at",
+            "updated_at",
+            "parent_id",
+            "photo",
+        )
 
     def get_replies(self, obj):
         replies = Comment.objects.filter(parent_id=obj)
@@ -85,42 +90,43 @@ class CommentSerializer(serializers.ModelSerializer):
         if len(value) < 1:
             raise serializers.ValidationError("댓글 내용을 입력해주세요.")
         return value
-    
+
     def create(self, validated_data):
-        request = self.context.get('request')
-        photo_id = self.context.get('photo_id')
+        request = self.context.get("request")
+        photo_id = self.context.get("photo_id")
         photo = Photo.objects.get(id=photo_id)
 
         if request and request.user.is_authenticated:
             comment = Comment.objects.create(
                 user_id=request.user,
                 photo_id=photo,
-                content=validated_data['content'],
-                parent_id=validated_data.get('parent_id', None)
+                content=validated_data["content"],
+                parent_id=validated_data.get("parent_id", None),
             )
             return comment
         else:
             raise serializers.ValidationError("로그인이 필요합니다.")
 
     def update(self, instance, validated_data):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if request and request.user != instance.user_id:
-            raise serializers.ValidationError('댓글 수정 권한이 없습니다.')
-        instance.content = validated_data.get('content', instance.content)
+            raise serializers.ValidationError("댓글 수정 권한이 없습니다.")
+        instance.content = validated_data.get("content", instance.content)
         instance.save()
         return instance
 
     def delete(self, instance):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if request and request.user != instance.user_id:
-            raise serializers.ValidationError('댓글 삭제 권한이 없습니다.')
+            raise serializers.ValidationError("댓글 삭제 권한이 없습니다.")
         instance.delete()
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('id', 'name')
+        fields = ("id", "name")
+
 
 def create(self, validated_data):
     tag, created = Tag.objects.get_or_create(**validated_data)
@@ -129,7 +135,7 @@ def create(self, validated_data):
         return tag
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
+        instance.name = validated_data.get("name", instance.name)
         instance.save()
         return instance
 
@@ -141,7 +147,7 @@ def create(self, validated_data):
 class PhotoTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoTag
-        fields = ('id', 'photo', 'tag')
+        fields = ("id", "photo", "tag")
 
         def create(self, validated_data):
             phototag, created = PhotoTag.objects.get_or_create(**validated_data)
@@ -150,21 +156,30 @@ class PhotoTagSerializer(serializers.ModelSerializer):
             return PhotoTag
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
+        instance.name = validated_data.get("name", instance.name)
         instance.save()
         return instance
 
     def delete(self, instance):
         instance.delete()
         return instance
-    
-    
+
+
 class PostSerializer(serializers.ModelSerializer):
     # is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = Photo
-        fields = ['id', 'user', 'photo_name', 'image_url', 'content', 'count', 'created_at', 'updated_at']
+        fields = [
+            "id",
+            "user",
+            "photo_name",
+            "image_url",
+            "content",
+            "count",
+            "created_at",
+            "updated_at",
+        ]
 
     # def get_is_author(self, obj):
     #     request = self.context.get('request')
