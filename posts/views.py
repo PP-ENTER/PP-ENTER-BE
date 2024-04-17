@@ -14,7 +14,6 @@ from django.db.models import Q
 
 from .permission import IsAuthorOrReadOnly
 
-
 class CheckLoginView(generics.GenericAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -94,7 +93,7 @@ class PostDetailView(generics.RetrieveAPIView):
     queryset = Photo.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
+    
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.count += 1

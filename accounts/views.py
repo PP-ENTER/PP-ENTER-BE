@@ -126,7 +126,6 @@ class AcceptFriendRequestView(generics.GenericAPIView):
                 {"detail": "Friend request not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
         from_user = friend_request.from_user
         to_user = friend_request.to_user
 
