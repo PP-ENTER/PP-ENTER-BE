@@ -343,20 +343,52 @@ gantt
 <table style="width: 100%;">
     <tbody>
         <tr>
+<<<<<<< HEAD
+            <td>회원가입</td>
+            <td>로그인</td>
+=======
             <td style="width: 33%;">회원가입</td>
             <td style="width: 33%;">로그인</td>
             <td style="width: 33%;">메인페이지 View</td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
             <td>
+<<<<<<< HEAD
+		<img src="회원가입.gif" width="100%">
+=======
                 <img src="README_img/1_accounts_register.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
             <td>
+<<<<<<< HEAD
+                <img src="로그인.gif" width="100%">
+=======
                 <img src="README_img/2_accounts_login_profile.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
+<<<<<<< HEAD
+        </tr>
+        <tr>
+            <td>메인페이지</td>
+            <td>메인페이지 더보기</td>
+            <td>세부내역클릭</td>
+        </tr>
+        <tr>
+=======
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             <td>
+<<<<<<< HEAD
+                <img src="메인페이지.gif" width="100%">
+=======
                 <img src="README_img/3_post_main_list.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
+<<<<<<< HEAD
+            <td>
+                <img src="더보기_세부.gif" width="100%">
+            </td>
+=======
         </tr>
         <tr>
             <td>세부페이지(더보기) view</td>
@@ -364,47 +396,95 @@ gantt
             <td>검색</td>
         </tr>
         <tr>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             <td>
+<<<<<<< HEAD
+                <img src="세부내역클릭_세부페이지(1page).gif" width="100%">
+=======
                 <img src="README_img/4_post_detail_list.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
+<<<<<<< HEAD
+=======
             <td>
                 <img src="README_img/5_post_detail.gif" width="100%">
             </td>
             <td>
                 <img src="README_img/6_post_search.gif" width="100%">
             </td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
+<<<<<<< HEAD
+            <td>페이스챗 방 만들기(발신자)</td>
+            <td>전화받기(수신자)</td>
+            <td>채팅하기</td>
+=======
             <td>영상통화 방만들기(발신자)</td>
             <td>영상통화 받기(수신자)</td>
             <td>채팅하기</td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
             <td>
+<<<<<<< HEAD
+	        <img src="방만들기(발신자).gif" width="100%">
+=======
                 <img src="README_img/7_chatroom_caller.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
             <td>
+<<<<<<< HEAD
+                <img src="방만들기(수신자).gif" width="100%">
+=======
                 <img src="README_img/8_chatroom_receiver.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
+<<<<<<< HEAD
+            <td>
+                <img src="채팅_대화.gif" width="100%">
+            </td>
+=======
             <td>
                 <img src="README_img/9_chatroom_message.gif" width="100%">
             </td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
+<<<<<<< HEAD
+            <td>게시글 작성</td>
+            <td>검색</td>
+            <td>게시글 삭제</td>
+=======
             <td>게시글 작성</td>
             <td>게시글 수정</td>
             <td>게시글 삭제</td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
             <td>
+<<<<<<< HEAD
+                <img src="게시글작성.gif" width="100%">
+=======
                 <img src="README_img/10_post_create.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
             <td>
+<<<<<<< HEAD
+                <img src="검색.gif" width="100%">
+=======
                 <img src="README_img/11_post_update.gif" width="100%">
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
+<<<<<<< HEAD
+            <td>
+                <img src="" width="100%">
+            </td>
+=======
             <td>
                 <img src="README_img/12_post_delete.gif" width="100%">
             </td>
+>>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
     </tbody>
 </table>
