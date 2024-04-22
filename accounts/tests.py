@@ -23,7 +23,9 @@ User = get_user_model()
 
 class CustomUserTestCase(TestCase):
     def setUp(self):
-        # 테스트를 위한 사용자 객체 생성
+        """
+        테스트를 위한 사용자 객체 생성
+        """
         self.user = User.objects.create_user(
             username="testuser",  # 사용자 이름
             password="testpassword123!",  # 비밀번호
@@ -38,7 +40,9 @@ class CustomUserTestCase(TestCase):
         )
 
     def test_create_custom_user(self):
-        # 생성된 사용자 객체의 속성 검증
+        """
+        생성된 사용자 객체의 속성 검증
+        """
         self.assertEqual(self.user.username, "testuser")  # 사용자 이름 검증
         self.assertEqual(self.user.nickname, "testnickname")  # 닉네임 검증
         self.assertIsNotNone(self.user.profile_image)  # 프로필 이미지가 존재하는지 검증
@@ -46,7 +50,9 @@ class CustomUserTestCase(TestCase):
         self.assertIsNotNone(self.user.last_name)  # 성이 존재하는지 검증
 
     def test_create_superuser(self):
-        # 슈퍼유저 객체 생성 및 속성 검증
+        """
+        슈퍼유저 객체 생성 및 속성 검증
+        """
         superuser = User.objects.create_superuser(
             username="testsuperuser",  # 슈퍼유저 이름
             password="testpassword123!",  # 비밀번호
@@ -58,7 +64,9 @@ class CustomUserTestCase(TestCase):
 
 class FriendModelTest(TestCase):
     def setUp(self):
-        # 테스트를 위한 사용자 객체 생성
+        """
+        테스트를 위한 사용자 객체 생성 및 친구 관계 생성
+        """
         self.user1 = User.objects.create(
             username="testuser1",  # 사용자1 이름
             password="testpassword123!",  # 비밀번호
@@ -73,14 +81,18 @@ class FriendModelTest(TestCase):
         self.friend = Friend.objects.create(user=self.user1, friend=self.user2)
 
     def test_friend_creation(self):
-        # 친구 관계 생성 검증
+        """
+        친구 '관계' 생성 검증
+        """
         self.assertEqual(self.friend.user, self.user1)  # 사용자1 검증
         self.assertEqual(self.friend.friend, self.user2)  # 사용자2 검증
         self.assertIsNotNone(self.friend.created_at)  # 생성 시간 존재 여부 검증
         self.assertEqual(str(self.friend), "testuser1 : testuser2")  # 친구 관계 문자열 표현 검증
 
     def test_friend_request_create(self):
-        # 친구 요청 생성 검증
+        """
+        친구 '요청' 생성 검증
+        """
         friend_request = FriendRequest.objects.create(
             from_user=self.user1,  # 요청 보내는 사용자
             to_user=self.user2  # 요청 받는 사용자
@@ -90,7 +102,9 @@ class FriendModelTest(TestCase):
         self.assertFalse(friend_request.status)  # 요청 상태 초기값 검증
 
     def test_friend_create(self):
-        # 별도의 친구 관계 생성 검증
+        """
+        별도의 친구 관계 생성 검증
+        """
         friend1 = User.objects.create(
             username="friend1",  # 친구1 이름
             password="friend1password",  # 비밀번호
@@ -106,12 +120,16 @@ class FriendModelTest(TestCase):
         self.assertEqual(friend.friend, friend2)  # 친구2 검증
 
     def test_unique_friend(self):
-        # 중복된 친구 관계 생성 시 예외 발생 검증
+        """
+        중복된 친구 관계 생성 시 예외 발생 검증
+        """
         with self.assertRaises(Exception):
             Friend.objects.create(user=self.user1, friend=self.user2)
 
     def test_friend_str(self):
-        # 친구 관계 문자열 표현 검증
+        """
+        친구 관계 문자열 표현 검증
+        """
         self.assertEqual(str(self.friend), "testuser1 : testuser2")
 
 
