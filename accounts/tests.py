@@ -135,11 +135,17 @@ class FriendModelTest(TestCase):
 
 class UserSerializerTestCase(TestCase):
     def setUp(self):
+        """
+        테스트를 위한 사용자 객체 생성
+        """
         self.user = User.objects.create_user(
             username="testuser", password="testpassword123!"
         )
 
     def test_user_serializer(self):
+        """
+        사용자 시리얼라이저 검증
+        """
         serializer = UserSerializer(instance=self.user)
         expected_data = {
             "id": self.user.id,
@@ -154,6 +160,9 @@ class UserSerializerTestCase(TestCase):
 
 class RegisterSerializerTestCase(TestCase):
     def test_register_serializer_valid(self):
+        """
+        유효한 회원가입 시리얼라이저 검증
+        """
         data = {
             "username": "newuser",
             "nickname": "New User",
@@ -166,6 +175,9 @@ class RegisterSerializerTestCase(TestCase):
         self.assertTrue(serializer.is_valid())
 
     def test_register_serializer_invalid_password(self):
+        """
+        비밀번호 불일치 시 회원가입 시리얼라이저 검증
+        """
         data = {
             "username": "newuser",
             "nickname": "New User",
@@ -181,17 +193,26 @@ class RegisterSerializerTestCase(TestCase):
 
 class LoginSerializerTestCase(TestCase):
     def setUp(self):
+        """
+        테스트를 위한 사용자 객체 생성
+        """
         self.user = User.objects.create_user(
             username="testuser", password="testpassword123!"
         )
 
     def test_login_serializer_valid(self):
+        """
+        유효한 로그인 시리얼라이저 검증
+        """
         data = {"username": "testuser", "password": "testpassword123!"}
         serializer = LoginSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data["user"], self.user)
 
     def test_login_serializer_invalid(self):
+        """
+        잘못된 비밀번호로 로그인 시리얼라이저 검증
+        """
         data = {"username": "testuser", "password": "wrongpassword"}
         serializer = LoginSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -200,6 +221,9 @@ class LoginSerializerTestCase(TestCase):
 
 class FriendSerializerTestCase(TestCase):
     def setUp(self):
+        """
+        테스트를 위한 사용자 객체 생성
+        """
         self.user1 = User.objects.create_user(
             username="user1", password="testpassword123!"
         )
@@ -208,22 +232,61 @@ class FriendSerializerTestCase(TestCase):
         )
 
     def test_friend_serializer_valid(self):
+        """
+        유효한 친구 시리얼라이저 검증
+        """
         data = {"user": self.user1.id, "friend": self.user2.id}
         serializer = FriendSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
     def test_friend_serializer_invalid_self_friend(self):
+        """
+        자기 자신을 친구로 추가하는 경우 시리얼라이저 검증
+        """
         data = {"user": self.user1.id, "friend": self.user1.id}
         serializer = FriendSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn("non_field_errors", serializer.errors)
 
     def test_friend_serializer_invalid_already_friends(self):
+        """
+        이미 친구인 경우 시리얼라이저 검증
+        """
         Friend.objects.create(user=self.user1, friend=self.user2)
         Friend.objects.create(user=self.user2, friend=self.user1)
 
         data = {"user": self.user1.id, "friend": self.user2.id}
         serializer = FriendSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("non_field_errors", serializer.errors)
+
+
+class FriendRequestSerializerTestCase(TestCase):
+    def setUp(self):
+        """
+        테스트를 위한 사용자 객체 생성
+        """
+        self.user1 = User.objects.create_user(
+            username="user1", password="testpassword123!"
+        )
+        self.user2 = User.objects.create_user(
+            username="user2", password="testpassword123!"
+        )
+
+    def test_friend_request_serializer_valid(self):
+        """
+        유효한 친구 요청 시리얼라이저 검증
+        """
+        data = {"from_user": self.user1.id, "to_user": self.user2.id}
+        serializer = FriendRequestSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+    def test_friend_request_serializer_invalid_self_request(self):
+        """
+        자기 자신에게 친구 요청을 보내는 경우 시리얼라이저 검증
+        """
+        data = {"from_user": self.user1.id, "to_user": self.user1.id}
+        serializer = FriendRequestSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertIn("non_field_errors", serializer.errors)
 
