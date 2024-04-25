@@ -276,6 +276,7 @@ class FriendRequestSerializerTestCase(TestCase):
     def test_friend_request_serializer_valid(self):
         """
         유효한 친구 요청 시리얼라이저 검증
+        - 서로 다른 사용자 간의 친구 요청 데이터가 유효한지 확인
         """
         data = {"from_user": self.user1.id, "to_user": self.user2.id}
         serializer = FriendRequestSerializer(data=data)
@@ -284,28 +285,8 @@ class FriendRequestSerializerTestCase(TestCase):
     def test_friend_request_serializer_invalid_self_request(self):
         """
         자기 자신에게 친구 요청을 보내는 경우 시리얼라이저 검증
+        - 자기 자신에게 친구 요청을 보내는 데이터가 유효하지 않은지 확인
         """
-        data = {"from_user": self.user1.id, "to_user": self.user1.id}
-        serializer = FriendRequestSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn("non_field_errors", serializer.errors)
-
-
-class FriendRequestSerializerTestCase(TestCase):
-    def setUp(self):
-        self.user1 = User.objects.create_user(
-            username="user1", password="testpassword123!"
-        )
-        self.user2 = User.objects.create_user(
-            username="user2", password="testpassword123!"
-        )
-
-    def test_friend_request_serializer_valid(self):
-        data = {"from_user": self.user1.id, "to_user": self.user2.id}
-        serializer = FriendRequestSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
-
-    def test_friend_request_serializer_invalid_self_request(self):
         data = {"from_user": self.user1.id, "to_user": self.user1.id}
         serializer = FriendRequestSerializer(data=data)
         self.assertFalse(serializer.is_valid())
@@ -314,6 +295,10 @@ class FriendRequestSerializerTestCase(TestCase):
 
 class CustomReadOnlyPermissionTestCase(TestCase):
     def setUp(self):
+        """
+        테스트를 위한 설정
+        - APIRequestFactory와 사용자 객체 생성
+        """
         self.factory = APIRequestFactory()
         self.user1 = User.objects.create_user(username="user1", password="password")
         self.user2 = User.objects.create_user(username="user2", password="password")
@@ -321,6 +306,10 @@ class CustomReadOnlyPermissionTestCase(TestCase):
         self.obj = self.user1  # 테스트용 객체 (예: 사용자 객체)
 
     def test_has_object_permission_safe_methods(self):
+        """
+        안전한 HTTP 메서드(GET, HEAD, OPTIONS)에 대한 객체 권한 검사
+        - 안전한 메서드에 대해 모든 사용자가 객체에 대한 권한을 가지는지 확인
+        """
         request = self.factory.get("/")
         request.user = self.user1
         permission = CustomReadOnly()
@@ -330,6 +319,10 @@ class CustomReadOnlyPermissionTestCase(TestCase):
         self.assertTrue(has_permission)
 
     def test_has_object_permission_unsafe_methods_owner(self):
+        """
+        안전하지 않은 HTTP 메서드(POST, PUT, PATCH, DELETE)에 대한 객체 소유자 권한 검사
+        - 객체 소유자가 안전하지 않은 메서드에 대해 객체에 대한 권한을 가지는지 확인
+        """
         request = self.factory.post("/")
         request.user = self.user1
         permission = CustomReadOnly()
@@ -339,6 +332,10 @@ class CustomReadOnlyPermissionTestCase(TestCase):
         self.assertTrue(has_permission)
 
     def test_has_object_permission_unsafe_methods_not_owner(self):
+        """
+        안전하지 않은 HTTP 메서드(POST, PUT, PATCH, DELETE)에 대한 비소유자 권한 검사
+        - 객체 소유자가 아닌 사용자가 안전하지 않은 메서드에 대해 객체에 대한 권한을 가지지 않는지 확인
+        """
         request = self.factory.post("/")
         request.user = self.user2
         permission = CustomReadOnly()
