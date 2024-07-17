@@ -343,31 +343,23 @@ gantt
 <table style="width: 100%;">
     <tbody>
         <tr>
-<<<<<<< HEAD
+
             <td>회원가입</td>
             <td>로그인</td>
-=======
+
             <td style="width: 33%;">회원가입</td>
             <td style="width: 33%;">로그인</td>
             <td style="width: 33%;">메인페이지 View</td>
->>>>>>> da7a089e6314b434816923d00560ae8064caa01f
         </tr>
         <tr>
             <td>
-<<<<<<< HEAD
 		<img src="회원가입.gif" width="100%">
-=======
                 <img src="README_img/1_accounts_register.gif" width="100%">
->>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
             <td>
-<<<<<<< HEAD
                 <img src="로그인.gif" width="100%">
-=======
                 <img src="README_img/2_accounts_login_profile.gif" width="100%">
->>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
-<<<<<<< HEAD
         </tr>
         <tr>
             <td>메인페이지</td>
@@ -375,14 +367,9 @@ gantt
             <td>세부내역클릭</td>
         </tr>
         <tr>
-=======
->>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             <td>
-<<<<<<< HEAD
                 <img src="메인페이지.gif" width="100%">
-=======
                 <img src="README_img/3_post_main_list.gif" width="100%">
->>>>>>> da7a089e6314b434816923d00560ae8064caa01f
             </td>
 <<<<<<< HEAD
             <td>
